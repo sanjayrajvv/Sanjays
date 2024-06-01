@@ -11,18 +11,21 @@ class Solution {
     }
 public:
     int maxProfit(vector<int>& prices) {
-        vector<vector<int>> dp(prices.size() + 2, vector<int>(2, 0));
+        vector<int> front1(2, 0), front2(2, 0), curr(2, 0);
 
         for (int index = prices.size() - 1; index >= 0; index--) {
             for (int buy = 0; buy <= 1; buy++) {
                 if (buy) {
-                    dp[index][buy] = max((-prices[index] + dp[index + 1][0]), dp[index + 1][1]);
+                    curr[buy] = max((-prices[index] + front1[0]), front1[1]);
                 } else {
-                    dp[index][buy] = max((prices[index] + dp[index + 2][1]), dp[index + 1][0]);
+                    curr[buy] = max((prices[index] + front2[1]), front1[0]);
                 }
             }
+
+            front2 = front1;
+            front1 = curr;
         }
 
-        return dp[0][1];
+        return front1[1];
     }
 };
