@@ -15,7 +15,7 @@ class Solution {
 public:
     int maxProfit(vector<int>& prices) {
 
-        vector<vector<int>> dp(prices.size(), vector<int>(5, -1));
+        vector<vector<int>> dp(prices.size(), vector<int>(4, -1));
 
         return f(0, 0, prices, dp);
     }
