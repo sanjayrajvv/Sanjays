@@ -16,20 +16,22 @@ public:
     int lengthOfLIS(vector<int>& nums) {
         int n = nums.size();
 
-        vector<vector<int>> dp(n + 1, vector<int>(n + 1, 0));
+        vector<int> ahead(n + 1, 0), curr(n + 1, 0);
 
         for (int index = n - 1; index >= 0; index--) {
             for (int prev_index = index - 1; prev_index >= -1; prev_index--) {
-                int notTake = dp[index + 1][prev_index + 1];
+                int notTake = ahead[prev_index + 1];
                 int Take = 0;
                 if (prev_index == -1 || nums[index] > nums[prev_index]) {
-                    Take = 1 + dp[index + 1][index + 1];
+                    Take = 1 + ahead[index + 1];
                 }
 
-                dp[index][prev_index + 1] = max(notTake, Take);
+                curr[prev_index + 1] = max(notTake, Take);
             }
+
+            ahead = curr;
         }
 
-        return dp[0][0];
+        return ahead[0];
     }
 };
