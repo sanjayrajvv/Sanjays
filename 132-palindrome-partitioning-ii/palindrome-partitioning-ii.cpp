@@ -1,32 +1,33 @@
 class Solution {
+    bool isPalindrome(int i, int j, string &s, vector<vector<int>> &dp2) {
+        if (dp2[i][j] != -1) return dp2[i][j];
+        
+        int start = i, end = j;
+        while (start < end) {
+            if (s[start] != s[end]) return dp2[i][j] = false;
+            start++;
+            end--;
+        }
+
+        return dp2[i][j] = true;
+    }
 public:
     int minCut(string s) {
         int n = s.size();
-        
-        // Step 1: Precompute the palindrome information
-        vector<vector<bool>> isPal(n, vector<bool>(n, false));
-        for (int i = n - 1; i >= 0; --i) {
-            for (int j = i; j < n; ++j) {
-                if (s[i] == s[j] && (j - i <= 2 || isPal[i + 1][j - 1])) {
-                    isPal[i][j] = true;
+        vector<int> dp(n + 1, 0);
+        vector<vector<int>> dp2(n, vector<int>(n, -1));
+
+        for (int i = n - 1; i >= 0; i--) {
+            int minCost = INT_MAX;
+            for (int j = i; j < n; j++) {
+                if (isPalindrome(i, j, s, dp2)) {
+                    int cost = 1 + dp[j + 1];
+                    minCost = min(minCost, cost);
                 }
             }
+            dp[i] = minCost;
         }
 
-        // Step 2: Initialize the dp array
-        vector<int> dp(n, INT_MAX);
-        for (int i = n - 1; i >= 0; --i) {
-            if (isPal[i][n - 1]) {
-                dp[i] = 0;  // No cut needed if s[i...n-1] is a palindrome
-            } else {
-                for (int j = i; j < n; ++j) {
-                    if (isPal[i][j]) {
-                        dp[i] = min(dp[i], 1 + dp[j + 1]);
-                    }
-                }
-            }
-        }
-
-        return dp[0];
+        return dp[0] - 1;
     }
 };
