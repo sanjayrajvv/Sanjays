@@ -24,15 +24,13 @@ public:
 
         while (next) {
             Node *curr = next;
-        
+            next = next->left;
             while (curr) {
                 if (curr->left) curr->left->next = curr->right;
                 if (curr->right && curr->next) curr->right->next = curr->next->left;
                 
                 curr = curr->next;
             }
-
-            next = next->left;
         }
 
         return root;
