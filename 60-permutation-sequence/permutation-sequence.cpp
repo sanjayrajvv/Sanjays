@@ -22,6 +22,7 @@ public:
             if (numbers.size() == 0) break;
 
             k = k % fact;
+
             fact = fact / numbers.size();
         }
 
