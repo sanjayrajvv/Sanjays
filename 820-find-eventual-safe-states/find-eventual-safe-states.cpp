@@ -1,41 +1,60 @@
+#include <vector>
+#include <queue>
+#include <algorithm>
+
+using namespace std;
+
 class Solution {
-    bool dfs(int node, vector<vector<int>>& graph, vector<int> &vis, vector<int> &pathVis, vector<int> &check) {
-        vis[node] = 1;
-        pathVis[node] = 1;
-
-        for (auto adjNode : graph[node]) {
-            if (!vis[adjNode]) {
-                if (dfs(adjNode, graph, vis, pathVis, check) == true) {
-                    return true;
-                }
-            } else if (pathVis[adjNode]) {
-                return true;
-            }
-        }
-
-        check[node] = 1;
-        pathVis[node] = 0;
-
-        return false;
-    }
 public:
     vector<int> eventualSafeNodes(vector<vector<int>>& graph) {
         int n = graph.size();
+        vector<vector<int>> rGraph(n);
 
-        vector<int> vis(n, 0), pathVis(n, 0), check(n, 0), ans;
-
-        for (int i = 0; i < n; i++) {
-            if (!vis[i]) {
-                dfs(i, graph, vis, pathVis, check);
+        // Reverse the graph
+        for (int node = 0; node < n; ++node) {
+            for (int adj : graph[node]) {
+                rGraph[adj].push_back(node);
             }
         }
 
-        for (int i = 0; i < n; i++) {
-            if (check[i]) {
-                ans.push_back(i);
+        // Calculate in-degrees
+        vector<int> inDegree(n, 0);
+        for (int node = 0; node < n; ++node) {
+            for (int adj : rGraph[node]) {
+                inDegree[adj]++;
             }
         }
 
+        // Topological sort using queue
+        vector<int> ans;
+        queue<int> q;
+        for (int i = 0; i < n; i++) {
+            if (inDegree[i] == 0) {
+                q.push(i);
+            }
+        }
+
+        while (!q.empty()) {
+            int node = q.front();
+            q.pop();
+            ans.push_back(node);
+
+            for (int adjNode : rGraph[node]) {
+                inDegree[adjNode]--;
+                if (inDegree[adjNode] == 0) {
+                    q.push(adjNode);
+                    
+                }
+            }
+        }
+
+        // Sort the answer list
+        sort(ans.begin(), ans.end());
         return ans;
     }
 };
+
+//Reverse the graph
+//Calculate inGegree of all nodes
+//Do toposort from the nodes having inDegree 0
+//Print all nodes which is visited
