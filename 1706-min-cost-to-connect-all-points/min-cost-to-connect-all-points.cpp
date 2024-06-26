@@ -37,9 +37,6 @@ public:
 class Solution {
     struct Edges {
         int weight, from, to;
-        bool operator<(const Edges& e) const {
-            return weight < e.weight;
-        }
     };
 
     vector<Edges> createEdges(vector<vector<int>>& points) {
@@ -64,7 +61,11 @@ public:
         
         vector<Edges> edges = createEdges(points);
 
-        sort(edges.begin(), edges.end());
+        //sort(edges.begin(), edges.end());
+
+        sort(edges.begin(), edges.end(), [](const Edges& a, const Edges& b) {
+            return a.weight < b.weight;
+        });
 
         DisjointSet ds(n);
 
