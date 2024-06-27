@@ -20,8 +20,20 @@ public:
 
         int target = sum / 2;
 
-        vector<vector<int>> dp(n, vector<int>(target + 1, -1));
+        vector<vector<int>> dp(n, vector<int>(target + 1, 0));
 
-        return f(n - 1, target, nums, dp);
+        for (int i = 0; i < n; i++) dp[i][0] = true;
+
+        for (int index = 1; index < n; index++) {
+            for (int t = 0; t <= target; t++) {
+                int notTake = dp[index - 1][t];
+                int take = false;
+                if (nums[index] <= t) take = dp[index - 1][t - nums[index]];
+
+                dp[index][t] = take | notTake;
+            }
+        }
+
+        return dp[n - 1][target];
     }
 };
