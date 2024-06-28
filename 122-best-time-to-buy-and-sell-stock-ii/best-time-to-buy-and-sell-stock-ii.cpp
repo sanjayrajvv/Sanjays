@@ -1,13 +1,20 @@
 class Solution {
-    int f(int index, bool buy, vector<int>& prices, vector<vector<int>> &dp) {
-        if (index == prices.size()) return 0;
+    int f(int index, int buy, int n, vector<int>& prices, vector<vector<int>> &dp) {
+        if (index == n) return 0;
 
         if (dp[index][buy] != -1) return dp[index][buy];
+
         int profit = 0;
         if (buy) {
-            profit = max((-prices[index] + f(index + 1, 0, prices, dp)), f(index + 1, 1, prices, dp));
+            int buyToday = -prices[index] + f(index + 1, !buy, n, prices, dp);
+            int notBuy = f(index + 1, buy, n, prices, dp);
+            
+            profit = max(buyToday, notBuy);
         } else {
-            profit = max((prices[index] + f(index + 1, 1, prices, dp)), f(index + 1, 0, prices, dp));
+            int sellToday = prices[index] + f(index + 1, !buy, n, prices, dp);
+            int notSell = f(index + 1, buy, n, prices, dp);
+
+            profit = max(sellToday, notSell);
         }
 
         return dp[index][buy] = profit;
@@ -16,18 +23,8 @@ public:
     int maxProfit(vector<int>& prices) {
         int n = prices.size();
 
-        int aheadNotBuy, aheadBuy, currBuy, currNotBuy;
-        aheadNotBuy = aheadBuy = 0;
+        vector<vector<int>> dp(n, vector<int>(2, -1));
 
-        for (int index = n - 1; index >= 0; index--) {
-            currBuy = max((-prices[index] + aheadNotBuy), aheadBuy);
-            currNotBuy = max((prices[index] + aheadBuy), aheadNotBuy);
-
-            aheadNotBuy = currNotBuy;
-            aheadBuy = currBuy;
-        }
-
-
-        return aheadBuy;
+        return f(0, 1, n, prices, dp);
     }
 };
