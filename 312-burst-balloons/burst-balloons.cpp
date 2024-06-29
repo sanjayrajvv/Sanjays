@@ -4,40 +4,24 @@ class Solution {
 
         if (dp[i][j] != -1) return dp[i][j];
 
-        int maxi = INT_MIN;
+        int maxCoins = -1e9;
         for (int index = i; index <= j; index++) {
-            int cost = nums[i - 1] * nums[index] * nums[j + 1] 
+            int coins = nums[i - 1] * nums[index] * nums[j + 1] 
             + f(i, index - 1, nums, dp) + f(index + 1, j, nums, dp);
-            maxi = max(maxi, cost);
-        }
 
-        return dp[i][j] = maxi;
+            maxCoins = max(maxCoins, coins);
+        } 
+
+        return dp[i][j] = maxCoins;
     }
 public:
     int maxCoins(vector<int>& nums) {
         int n = nums.size();
-        nums.push_back(1);
         nums.insert(nums.begin(), 1);
+        nums.push_back(1);
 
-        vector<vector<int>> dp(n + 2, vector<int>(n + 2, 0));
+        vector<vector<int>> dp(n + 1, vector<int>(n + 1, -1));
 
-        for (int i = n; i >= 1; i--) {
-            for (int j = 1; j <= n; j++) {
-                if (i > j) continue;
-
-                int maxi = INT_MIN;
-                for (int index = i; index <= j; index++) {
-                    int cost = nums[i - 1] * nums[index] * nums[j + 1] 
-                                + dp[i][index - 1]
-                                + dp[index + 1][j];
-
-                    maxi = max(maxi, cost);
-                }
-
-                dp[i][j] = maxi;
-            }
-        }
-
-        return dp[1][n];
+        return f(1, n, nums, dp);
     }
 };
