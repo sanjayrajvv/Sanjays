@@ -1,37 +1,25 @@
 class Solution {
-    int f(int index, int n, int k, vector<int> &arr, vector<int> &dp) {
-        if (index == n) return 0;
+    int f(int i, int n, vector<int> &arr, int k, vector<int> &dp) {
+        if (i == n) return 0;
 
-        if (dp[index] != -1) return dp[index];
+        if (dp[i] != -1) return dp[i];
 
-        int maxAns = INT_MIN, len = 0, maxi = INT_MIN;
-        for (int j = index; j < min(n, index + k); j++) {
+        int subSum = -1e9, len = 0, maxAns = -1e9;
+        for (int j = i; j < min(n, i + k); j++) {
             len++;
-            maxi = max(maxi, arr[j]);
-            int sum = (len * maxi) + f(j + 1, n, k, arr, dp);
-            maxAns = max(maxAns, sum);
+            subSum = max(subSum, arr[j]);
+
+            maxAns = max(maxAns, (len * subSum) + f(j + 1, n, arr, k, dp));
         }
 
-        return dp[index] = maxAns;
+        return dp[i] = maxAns;
     }
 public:
     int maxSumAfterPartitioning(vector<int>& arr, int k) {
         int n = arr.size();
 
-        vector<int> dp(n + 1, 0);
+        vector<int> dp(n, -1);
 
-        for (int index = n - 1; index >= 0; index--) {
-            int maxAns = INT_MIN, len = 0, maxi = INT_MIN;
-            for (int j = index; j < min(n, index + k); j++) {
-                len++;
-                maxi = max(maxi, arr[j]);
-                int sum = (len * maxi) + dp[j + 1];
-                maxAns = max(maxAns, sum);
-            }
-
-            dp[index] = maxAns;
-        }
-
-        return dp[0];
+        return f(0, n, arr, k, dp);
     }
 };
