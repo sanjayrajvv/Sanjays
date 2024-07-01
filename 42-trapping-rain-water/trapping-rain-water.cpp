@@ -1,26 +1,28 @@
 class Solution {
-    void computeMax(vector<int>& prefixMax, vector<int>& suffixMax, vector<int>& height) {
-        prefixMax[0] = height[0];
-        for (int i = 1; i < height.size(); i++) {
-            prefixMax[i] = max(prefixMax[i - 1], height[i]);
-        }
-
-        suffixMax[height.size() - 1] = height[height.size() - 1];
-        for (int i = height.size() - 2; i >= 0; i--) {
-            suffixMax[i] = max(suffixMax[i + 1], height[i]);
-        }
-    }
 public:
     int trap(vector<int>& height) {
-        int n = height.size();
+        int l = 0, r = height.size() - 1;
 
-        vector<int> prefixMax(n), suffixMax(n);
-
-        computeMax(prefixMax, suffixMax, height);
+        int leftMax = 0, rightMax = 0;
 
         int water = 0;
-        for (int i = 0; i < n; i++) {
-            water += max(0, min(prefixMax[i], suffixMax[i]) - height[i]);
+
+        while (l < r) {
+            if (height[l] <= height[r]) {
+                if (height[l] < leftMax) {
+                    water += (leftMax - height[l]);
+                } else {
+                    leftMax = height[l];
+                }
+                l++;
+            } else {
+                if (height[r] < rightMax) {
+                    water += (rightMax - height[r]);
+                } else {
+                    rightMax = height[r];
+                }
+                r--;
+            }
         }
 
         return water;
