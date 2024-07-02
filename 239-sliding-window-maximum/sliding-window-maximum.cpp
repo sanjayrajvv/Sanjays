@@ -6,17 +6,17 @@ public:
         vector<int> ans;
 
         for (int i = 0; i < n; i++) {
-            while (!dq.empty() && nums[i] > dq.back()) {
+            while (!dq.empty() && nums[i] > nums[dq.back()]) {
                 dq.pop_back();
             }
-            dq.push_back(nums[i]);
+            dq.push_back(i);
 
-            if (i >= k && dq.front() == nums[i - k]) {
+            if (i >= k && dq.front() <= i - k) {
                 dq.pop_front();
             }
 
             if (i >= k - 1) {
-                ans.push_back(dq.front());
+                ans.push_back(nums[dq.front()]);
             }
         }
 
