@@ -23,11 +23,7 @@ public:
                 }
 
                 if (board[i][j] == 1 || board[i][j] == 3) {
-                    if (count < 2) {
-                        board[i][j] = 3;
-                    } else if (count == 2 || count == 3) {
-                        continue;
-                    } else {
+                    if (count < 2 || count > 3) {
                         board[i][j] = 3;
                     }
                 } else {
