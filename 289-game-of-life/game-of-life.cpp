@@ -22,7 +22,7 @@ public:
                     }
                 }
 
-                if (board[i][j] == 1 || board[i][j] == 3) {
+                if (board[i][j] == 1) {
                     if (count < 2 || count > 3) {
                         board[i][j] = 3;
                     }
