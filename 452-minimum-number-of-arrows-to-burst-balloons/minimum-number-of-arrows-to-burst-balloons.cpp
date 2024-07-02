@@ -17,6 +17,8 @@ public:
             if (points[i][0] > end) {  // No overlap with the previous interval
                 arrows++;
                 end = points[i][1];  // Update the end point to the current balloon's end point
+            } else {
+                end = min(end, points[i][1]);
             }
         }
         
