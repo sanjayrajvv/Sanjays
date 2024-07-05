@@ -1,21 +1,16 @@
 class Solution {
 public:
     int singleNumber(vector<int>& nums) {
-        int ans = 0;
+        int n = nums.size();
 
-        for (int bit = 0; bit < 32; bit++) {
-            int count = 0;
-            for (int i = 0; i < nums.size(); i++) {
-                if (nums[i] & (1 << bit)) {
-                    count++;
-                }
-            }
+        sort(nums.begin(), nums.end());
 
-            if (count % 3 == 1) {
-                ans = ans | (1 << bit);
+        for (int i = 0; i < n - 1; i += 3) {
+            if (nums[i] != nums[i + 1]) {
+                return nums[i];
             }
         }
 
-        return ans;
+        return nums[n - 1];
     }
 };
