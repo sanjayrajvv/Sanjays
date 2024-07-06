@@ -12,16 +12,10 @@ public:
                 continue;
             }
 
-            if (i - 1 >= 0) {
-                if (flowerbed[i - 1] != 0) {
-                    flag = false;
-                }
-            }
-
-            if (i + 1 < bedSize) {
-                if (flowerbed[i + 1] != 0) {
-                    flag = false;
-                }
+            if (i - 1 >= 0 && flowerbed[i - 1] != 0) {
+                flag = false;
+            } else if (i + 1 < bedSize && flowerbed[i + 1] != 0) {
+                flag = false;
             }
 
             if (flag) {
