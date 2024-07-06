@@ -1,33 +1,30 @@
 class Solution {
 public:
     int compress(vector<char>& chars) {
-        int index = 0;  // This will keep track of the position to insert characters in the array.
-        
-        for (int i = 0; i < chars.size();) {
-            char current_char = chars[i];
+        int index = 0;
+        int n = chars.size();
+
+        int i = 0;
+        while(i < n) {
             int count = 0;
-            
-            // Count the number of occurrences of the current character
-            while (i < chars.size() && chars[i] == current_char) {
+            char currChar = chars[i];
+            while (i < n && currChar == chars[i]) {
                 i++;
                 count++;
             }
-            
-            // Insert the character
-            chars[index++] = current_char;
-            
-            // If count is greater than 1, insert the number as characters
+
+            chars[index++] = currChar;
+
             if (count > 1) {
-                string count_str = to_string(count);
-                for (char c : count_str) {
+                string num = to_string(count);
+                for (char c : num) {
                     chars[index++] = c;
                 }
             }
         }
-        
-        // Resize the vector to the new length
+
         chars.resize(index);
-        
+
         return index;
     }
 };
