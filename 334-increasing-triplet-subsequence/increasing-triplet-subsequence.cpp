@@ -13,7 +13,7 @@ public:
                 firstSmall = nums[i];
             } else if (nums[i] <= secondSmall) {
                 secondSmall = nums[i];
-            } else return true;
+            } else if (nums[i] > secondSmall) return true;
         }
 
         return false;
