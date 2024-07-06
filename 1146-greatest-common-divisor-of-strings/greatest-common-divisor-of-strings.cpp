@@ -1,12 +1,13 @@
 class Solution {
-    int _gcd(int a, int b) {
-        while (b > 0) {
-            int temp = b;
-            b = a % b;
-            a = temp;
+    int _gcd(int r1, int r2) {
+        while (r2 > 0) {
+            int temp = r2;
+            int remainder = r1 % r2;
+            r2 = remainder;
+            r1 = temp;
         }
 
-        return a;
+        return r1;
     }
 public:
     string gcdOfStrings(string str1, string str2) {
