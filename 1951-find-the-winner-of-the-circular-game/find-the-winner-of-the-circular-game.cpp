@@ -2,15 +2,10 @@ class Solution {
 public:
     int findTheWinner(int n, int k) 
     {
-        vector<int> circle(n);
-        for (int i = 0; i < n; ++i) circle[i] = i + 1;
-
-        int index = 0;
-        while (circle.size() > 1) 
-        {
-            index = (index + k - 1) % circle.size();
-            circle.erase(circle.begin() + index);
+        int winner = 0; // This represents the last person standing, 0-based index.
+        for (int i = 1; i <= n; ++i) {
+            winner = (winner + k) % i;
         }
-        return circle[0];
+        return winner + 1; // Convert to 1-based index.
     }
 };
