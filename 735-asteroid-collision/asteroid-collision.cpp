@@ -7,18 +7,18 @@ public:
             bool collision = false;
             while (!st.empty() && st.top() > 0 && a < 0) {
                 if (abs(st.top()) < abs(a)) {
-                    st.pop();  // The asteroid on the stack is smaller and is destroyed
+                    st.pop();
                 } else if (abs(st.top()) == abs(a)) {
-                    st.pop();  // Both asteroids are of equal size and destroy each other
+                    st.pop();
                     collision = true;
                     break;
                 } else {
                     collision = true;
-                    break;  // The asteroid on the stack is larger and survives
+                    break;
                 }
             }
             if (!collision) {
-                st.push(a);  // No collision, or the current asteroid survives
+                st.push(a);
             }
         }
 
@@ -27,7 +27,8 @@ public:
             ans.push_back(st.top());
             st.pop();
         }
-        reverse(ans.begin(), ans.end());  // Reverse to get the correct order
+
+        reverse(ans.begin(), ans.end());
 
         return ans;
     }
