@@ -5,11 +5,11 @@ public:
         double curr = x;
         double result = 1.0;
         
-        for (long i = exponent; i > 0; i /= 2) {
+        for (long i = exponent; i > 0; i = i / 2) {
             if (i % 2 == 1) {
-                result *= curr;
+                result = result * curr;
             }
-            curr *= curr;
+            curr = curr * curr;
         }
         
         if (n < 0) {
