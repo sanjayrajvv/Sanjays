@@ -22,11 +22,11 @@ public:
 
         string reversed = "";
         while (!st.empty()) {
-            reversed = reversed + st.top();
+            reversed = st.top() + reversed;
             st.pop();
         }
 
-        reverse(reversed.begin(), reversed.end());
+        //reverse(reversed.begin(), reversed.end());
 
         return reversed;
     }
