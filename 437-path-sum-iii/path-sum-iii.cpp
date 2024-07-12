@@ -1,25 +1,26 @@
 class Solution {
-    void findPaths(TreeNode* root, int targetSum, unordered_map<long, int>& prefixSumCount, long currentSum, int &count) {
-        if (!root) return;
+    int countPaths(TreeNode* root, int target, std::vector<int>& path) {
+        if (!root) return 0;
 
-        currentSum += root->val;
+        path.push_back(root->val);
+        long sum = 0, counter = 0;
 
-        if (currentSum == targetSum) count++;
+        for (int i = path.size() - 1; i >= 0; --i) {
+            sum += path[i];
+            if (sum == target) {
+                counter++;
+            }
+        }
 
-        count += prefixSumCount[currentSum - targetSum];
+        counter += countPaths(root->left, target, path);
+        counter += countPaths(root->right, target, path);
 
-        prefixSumCount[currentSum]++;
-
-        findPaths(root->left, targetSum, prefixSumCount, currentSum, count);
-        findPaths(root->right, targetSum, prefixSumCount, currentSum, count);
-
-        prefixSumCount[currentSum]--;
+        path.pop_back();
+        return counter;
     }
 public:
     int pathSum(TreeNode* root, int targetSum) {
-        unordered_map<long, int> prefixSumCount;
-        int count = 0;
-        findPaths(root, targetSum, prefixSumCount, 0, count);
-        return count;
+        std::vector<int> path;
+        return countPaths(root, targetSum, path);
     }
 };
