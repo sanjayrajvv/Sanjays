@@ -1,43 +1,37 @@
-/**
- * Definition for a binary tree node.
- * struct TreeNode {
- *     int val;
- *     TreeNode *left;
- *     TreeNode *right;
- *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
- *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
- *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
- * };
- */
 class BSTIterator {
-    stack<TreeNode*> S;
+private:
+    stack<TreeNode*> st;
     bool reverse = true;
 
+private:
     void pushAll(TreeNode *root) {
-        while (root != NULL) {
-            S.push(root);
-            if (reverse) root = root->left;
-            else root = root->right;
+        while (root) {
+            st.push(root);
+
+            if (reverse) root = root->right;
+            else root = root->left;
         }
     }
+
 public:
     BSTIterator(TreeNode* root, bool isReverse) {
         reverse = isReverse;
         pushAll(root);
+        
     }
     
     int next() {
-        TreeNode *temp = S.top();
-        S.pop();
+        TreeNode *top = st.top();
+        st.pop();
 
-        if (reverse) pushAll(temp->right);
-        else pushAll(temp->left);
+        if (reverse) pushAll(top->left);
+        else pushAll(top->right);
 
-        return temp->val;
+        return top->val;
     }
     
     bool hasNext() {
-		return !S.empty();  
+        return !st.empty();
     }
 };
 
@@ -46,16 +40,16 @@ public:
     bool findTarget(TreeNode* root, int k) {
         if (!root) return false;
 
-        BSTIterator front(root, true);
-        BSTIterator back(root, false);
+        BSTIterator l = BSTIterator(root, false);
+        BSTIterator r = BSTIterator(root, true);
 
-        int l = front.next();
-        int h = back.next();
+        int i = l.next();
+        int j = r.next();
 
-        while (l < h) {
-            if (l + h == k) return true;
-            else if (l + h > k) h = back.next();
-            else l = front.next();
+        while (i < j) {
+            if (i + j == k) return true;
+            else if (i + j < k) i = l.next();
+            else j = r.next();
         }
 
         return false;
