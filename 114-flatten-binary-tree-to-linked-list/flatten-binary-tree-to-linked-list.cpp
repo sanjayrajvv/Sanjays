@@ -11,28 +11,17 @@
  */
 class Solution {
 private:
-    TreeNode *leftMost(TreeNode *node) {
-        while (node->right) {
-            node = node->right;
-        }
-
-        return node;
-    }
+    TreeNode *prev = NULL;
 public:
     void flatten(TreeNode* root) {
         if (root == NULL) return;
 
-        while (root) {
-            if (!root->left) {
-                root = root->right;
-            } else {
-                TreeNode *rightMost = leftMost(root->left);
-                TreeNode *temp = root->right;
-                root->right = root->left;
-                root->left = NULL;
-                rightMost->right = temp;
-                root = root->right;
-            }
-        }
+        flatten(root->right);
+        flatten(root->left);
+
+        root->right = prev;
+        root->left = NULL;
+
+        prev = root;
     }
 };
