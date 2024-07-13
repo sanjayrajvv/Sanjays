@@ -17,6 +17,6 @@ public:
 
         if (l == NULL) return r;
         if (r == NULL) return l;
-        else return root;
+        return root;
     }
 };
