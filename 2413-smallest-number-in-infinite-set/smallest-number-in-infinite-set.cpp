@@ -1,24 +1,29 @@
 class SmallestInfiniteSet {
+    int curr;
+    set<int> st;
 public:
     SmallestInfiniteSet() {
-        constexpr int N = 1000;
-        for (int i = 1; i <= N; ++i) {
-          s.emplace(i);
+        curr = 1;
+    }
+    
+    int popSmallest() {
+        if (!st.empty()) {
+            int x = *st.begin();
+            st.erase(st.find(x));
+
+            return x;
+        } else {
+            return curr++;
         }
     }
-
-    int popSmallest() {
-        const int res = *s.begin();
-        s.erase(s.begin());
-        return res;
-    }
-
+    
     void addBack(int num) {
-        s.insert(num);
+        if (num < curr) {
+            if (st.find(num) == st.end()) {
+                st.insert(num);
+            }
+        }
     }
-
-private:
-    set<int> s;
 };
 
 /**
