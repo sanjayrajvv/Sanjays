@@ -10,28 +10,20 @@
  * };
  */
 class Solution {
-    TreeNode *helper(TreeNode* root, int val, int depth, int currDepth) {
+    TreeNode *helper(TreeNode *root, int val, int depth, int currDepth) {
         if (depth == 1) {
-            TreeNode *node = new TreeNode(val);
-            node->left = root;
-            node->right = NULL;
-
-            return node;
+            return new TreeNode(val, root, NULL);
         }
 
-        if (root == NULL) return root;
+        if (!root) return root;
 
         if (currDepth == depth - 1) {
-            TreeNode *leftman = root->left;
-            TreeNode *rightman = root->right;
+            TreeNode *l = root->left;
+            TreeNode *r = root->right;
 
-            root->left = new TreeNode(val);
-            root->left->left = leftman;
-            root->left->right = NULL;
+            root->left = new TreeNode(val, l, NULL);
 
-            root->right = new TreeNode(val);
-            root->right->left = NULL;
-            root->right->right = rightman;
+            root->right = new TreeNode(val, NULL, r);
 
             return root;
         }
@@ -39,7 +31,7 @@ class Solution {
         root->left = helper(root->left, val, depth, currDepth + 1);
         root->right = helper(root->right, val, depth, currDepth + 1); 
 
-        return root;
+        return root; 
     }
 public:
     TreeNode* addOneRow(TreeNode* root, int val, int depth) {
