@@ -1,37 +1,41 @@
 class Solution {
 public:
     int leastInterval(vector<char>& tasks, int n) {
-        priority_queue<int, vector<int>> maxHeap;
-        queue<pair<int, int>> q;
-        int hash[26] = {0};
-
-        for (int i = 0; i < tasks.size(); i++) {
-            hash[tasks[i] - 'A']++;
+        // Building frequency map
+        int freq[26] = {0};
+        for (char &ch : tasks) {
+            freq[ch - 'A']++;
         }
 
-        for (auto i : hash) {
-            if (i > 0) {
-                maxHeap.push(i);
+        // Max heap to store frequencies
+        priority_queue<int> pq;
+        for (int i = 0; i < 26; i++) {
+            if (freq[i] > 0) {
+                pq.push(freq[i]);
             }
         }
 
-        int intervals = 0;
-        while (!maxHeap.empty() || !q.empty()) {
-            intervals++;
-
-            if (!maxHeap.empty()) {
-                if (maxHeap.top() - 1) {
-                    q.push({maxHeap.top() - 1, intervals + n});
+        int time = 0;
+        // Process tasks until the heap is empty
+        while (!pq.empty()) {
+            int cycle = n + 1;
+            vector<int> store;
+            int taskCount = 0;
+            // Execute tasks in each cycle
+            while (cycle-- && !pq.empty()) {
+                if (pq.top() > 1) {
+                    store.push_back(pq.top() - 1);
                 }
-                maxHeap.pop();
+                pq.pop();
+                taskCount++;
             }
-
-            if (!q.empty() && q.front().second == intervals) {
-                maxHeap.push(q.front().first);
-                q.pop();
+            // Restore updated frequencies to the heap
+            for (int &x : store) {
+                pq.push(x);
             }
+            // Add time for the completed cycle
+            time += (pq.empty() ? taskCount : n + 1);
         }
-
-        return intervals;
+        return time;
     }
 };
