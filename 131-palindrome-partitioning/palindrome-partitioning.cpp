@@ -1,24 +1,26 @@
 class Solution {
-    bool isPal(string s) {
-        for (int i = 0; i < s.size() / 2; i++) {
-            if (s[i] != s[s.size() - i - 1]) return false;
+    bool is_palindrome(string k) {
+        for (int i = 0; i < k.size() / 2; i++) {
+            if (k[i] != k[k.size() - i - 1]) {
+                return 0;
+            }
         }
 
-        return true;
+        return 1;
     }
+
     void f(int index, string s, vector<string> &ds, vector<vector<string>> &ans) {
         if (index == s.size()) {
             ans.push_back(ds);
-
             return;
         }
 
         for (int i = index; i < s.size(); i++) {
-            if (isPal(s.substr(index, i - index + 1))) {
+            if (is_palindrome(s.substr(index, i - index + 1))) {
                 ds.push_back(s.substr(index, i - index + 1));
                 f(i + 1, s, ds, ans);
                 ds.pop_back();
-            } 
+            }
         }
     }
 public:
