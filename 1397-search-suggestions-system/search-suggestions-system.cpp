@@ -1,77 +1,88 @@
-#include <vector>
-#include <string>
-#include <algorithm>
-
-using namespace std;
-
 struct TrieNode {
-    TrieNode *children[26] = {nullptr};
+    TrieNode *children[26];
     bool endOfWord = false;
+
+    bool containsKey(char ch) {
+        return children[ch - 'a'] != nullptr;
+    }
+
+    void put(char ch, TrieNode *node) {
+        children[ch - 'a'] = node;
+    }
+
+    TrieNode *get(char ch) {
+        return children[ch - 'a'];
+    }
+
+    void setEnd() {
+        endOfWord = true;
+    }
+
+    bool isEnd() {
+        return endOfWord;
+    }
 };
 
 class Solution {
-public:
-    // Insert a word into the trie
-    void insertWord(TrieNode *trie, const string &word) {
-        for (const char &c : word) {
-            int index = c - 'a';
-            if (!trie->children[index]) {
-                trie->children[index] = new TrieNode;
+private:
+    void insertWord(string &product) {
+        TrieNode *node = trie;
+        for (char c : product) {
+            if (!node->containsKey(c)) {
+                node->put(c, new TrieNode());
             }
-            trie = trie->children[index];
+            node =node->get(c);
         }
-        trie->endOfWord = true;
+
+        node->setEnd();
     }
 
-    // Search for a prefix in the trie and collect words starting with that prefix
-    vector<string> searchWords(TrieNode *trie, const string &prefix) {
+    vector<string> searchWords(string prefix) {
         vector<string> result;
-        for (const char &c : prefix) {
-            int index = c - 'a';
-            if (!trie->children[index]) {
+
+        TrieNode *node = trie;
+        for (char c : prefix) {
+            if (!node->containsKey(c)) {
                 return {};
             }
-            trie = trie->children[index];
+            node =node->get(c);
         }
-        dfs(trie, prefix, result);
+
+        dfs(node, prefix, result);
+        
         return result;
     }
 
-    // Perform DFS to find all words in the trie starting from the given prefix
-    void dfs(TrieNode *trie, const string &prefix, vector<string> &result) {
-        if (result.size() == 3) {
-            return;
-        }
-        if (trie->endOfWord) {
-            result.push_back(prefix);
-        }
-        for (int i = 0; i < 26; ++i) {
-            if (trie->children[i]) {
-                dfs(trie->children[i], prefix + (char)(i + 'a'), result);
+    void dfs(TrieNode *node, string pre, vector<string> &result) {
+        if (result.size() == 3) return;
+        if (node->isEnd()) result.push_back(pre);
+
+        for (char c = 'a'; c <= 'z'; c++) {
+            if (node->containsKey(c)) {
+                dfs(node->get(c), pre + c, result);
             }
         }
     }
+public:
+    TrieNode *trie;
 
-    // Function to return product suggestions based on the search word
-    vector<vector<string>> suggestedProducts(vector<string>& products, const string &searchWord) {
-        // Sort the products to ensure the suggestions are lexicographically sorted
-        sort(products.begin(), products.end());
-
-        // Initialize the trie
-        TrieNode *trie = new TrieNode;
-        for (const string &product : products) {
-            insertWord(trie, product);
+    Solution() {
+        trie = new TrieNode();
+    }
+public:
+    vector<vector<string>> suggestedProducts(vector<string>& products, 
+    string searchWord) {
+        for (string &product : products) {
+            insertWord(product);
         }
 
-        // Collect suggestions for each prefix of the search word
         vector<vector<string>> result;
         string prefix;
-        for (const char &c : searchWord) {
+        for (char &c : searchWord) {
             prefix += c;
-            result.push_back(searchWords(trie, prefix));
-        }
+            result.push_back(searchWords(prefix));
+        } 
 
         return result;
     }
 };
-
