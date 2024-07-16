@@ -3,7 +3,7 @@ struct Node {
     bool flag = false;
 
     bool containsKey(char ch) {
-        return (links[ch - 'a'] != NULL);
+        return links[ch - 'a'] != NULL;
     }
 
     void put(char ch, Node *node) {
@@ -14,16 +14,17 @@ struct Node {
         return links[ch - 'a'];
     }
 
-    void setEnd() {
-        flag = true;
-    }
-
     bool isEnd() {
         return flag;
+    }
+
+    void setEnd() {
+        flag = true;
     }
 };
 
 class Trie {
+private:
     Node *root;
 public:
     Trie() {
@@ -38,6 +39,7 @@ public:
             }
             node = node->get(word[i]);
         }
+
         node->setEnd();
     }
     
@@ -47,7 +49,6 @@ public:
             if (!node->containsKey(word[i])) {
                 return false;
             }
-
             node = node->get(word[i]);
         }
 
