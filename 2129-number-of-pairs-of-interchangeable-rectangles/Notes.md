@@ -1,0 +1,1 @@
+<h2>number-of-pairs-of-interchangeable-rectangles Notes</h2><hr>[ Time taken: 16 m 11 s ]
