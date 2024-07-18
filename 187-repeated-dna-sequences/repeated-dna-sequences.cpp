@@ -4,26 +4,14 @@ public:
         if (s.size() < 10) return {};
 
         map<string, int> hash;
-
-        string dna = "";
-        for (int i = 0; i < 10; i++) {
-            dna += s[i];
-        }
-        hash[dna]++;
-
-        int j = 10;
-        while (j < s.size()) {
-            dna = dna.substr(1);
-            dna += s[j];
-
-            hash[dna]++;
-            j++;
-        }
-
         vector<string> sequences;
-        for (auto i : hash) {
-            if (i.second > 1) {
-                sequences.push_back(i.first);
+
+        for (int i = 0; i <= s.size() - 10; i++) {
+            string dna = s.substr(i, 10);
+            hash[dna]++;
+
+            if (hash[dna] == 2) {
+                sequences.push_back(dna);
             }
         }
 
