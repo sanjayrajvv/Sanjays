@@ -11,22 +11,18 @@ public:
     int swimInWater(vector<vector<int>>& grid) {
         int n = grid.size();
  
-        priority_queue<pair<int, pair<int, int>>, vector<pair<int, 
-        pair<int, int>>>, greater<pair<int, pair<int, int>>>> pq;
+        priority_queue<vector<int>, vector<vector<int>>, 
+        greater<vector<int>>> pq;
         vector<vector<bool>> vis(n, vector<bool>(n, false));
 
-        int maxHeight = grid[0][0];
-        pq.push({maxHeight, {0, 0}});
+        pq.push({grid[0][0], 0, 0});
         vis[0][0] = 1;
 
          while (!pq.empty()) {
-            auto t = pq.top();
+            int height = pq.top()[0];
+            int r = pq.top()[1];
+            int c = pq.top()[2];
             pq.pop();
-            int height = t.first;
-            int r = t.second.first;
-            int c = t.second.second;
-
-            //maxHeight = max(maxHeight, height);
 
             if (r == n - 1 && c == n - 1) return height;
 
@@ -35,7 +31,7 @@ public:
                 int nc = c + delCol[i];
 
                 if (isBound(nr, nc, n) && !vis[nr][nc]) {
-                    pq.push({max(grid[nr][nc], height), {nr, nc}});
+                    pq.push({max(grid[nr][nc], height), nr, nc});
                     vis[nr][nc] = true;
                 }
             }
