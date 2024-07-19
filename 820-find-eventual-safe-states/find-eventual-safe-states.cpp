@@ -1,40 +1,50 @@
+#include <vector>
+
+using namespace std;
+
 class Solution {
 private:
-    bool dfs(int node, int n, vector<vector<int>>& graph, vector<int> &visited,
-    vector<int> &pathVisited, vector<int> &check) {
+    bool dfs(int node, vector<vector<int>>& graph, vector<int>& visited, vector<int>& pathVisited, vector<int>& check) {
         visited[node] = 1;
         pathVisited[node] = 1;
 
-        for (auto adj : graph[node]) {
-            if (!visited[adj]) {
-                if (dfs(adj, n, graph, visited, pathVisited, check) == true) {
-                    check[adj] = 0;
+        // Explore all adjacent nodes
+        for (auto adjacentNode : graph[node]) {
+            if (!visited[adjacentNode]) {
+                if (dfs(adjacentNode, graph, visited, pathVisited, check)) {
+                    check[adjacentNode] = 0;
                     return true;
                 }
-            } else if (pathVisited[adj]) {
-                check[adj] = 0;
+            } else if (pathVisited[adjacentNode]) {
+                check[adjacentNode] = 0;
                 return true;
             }
         }
 
+        // Mark the current node as safe
         check[node] = 1;
         pathVisited[node] = 0;
 
         return false;
     }
+
 public:
     vector<int> eventualSafeNodes(vector<vector<int>>& graph) {
-        int n = graph.size();
-        vector<int> visited(n, 0), pathVisited(n, 0), check(n, 0);
+        int numNodes = graph.size();
+        vector<int> visited(numNodes, 0);
+        vector<int> pathVisited(numNodes, 0);
+        vector<int> check(numNodes, 0);
 
-        for (int i = 0; i < n; i++) {
+        // Perform DFS from each unvisited node
+        for (int i = 0; i < numNodes; ++i) {
             if (!visited[i]) {
-                dfs(i, n, graph, visited, pathVisited, check);
+                dfs(i, graph, visited, pathVisited, check);
             }
         }
 
+        // Collect all safe nodes
         vector<int> safeNodes;
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < numNodes; ++i) {
             if (check[i] == 1) {
                 safeNodes.push_back(i);
             }
