@@ -1,60 +1,45 @@
-#include <vector>
-#include <queue>
-#include <algorithm>
-
-using namespace std;
-
 class Solution {
+private:
+    bool dfs(int node, int n, vector<vector<int>>& graph, vector<int> &visited,
+    vector<int> &pathVisited, vector<int> &check) {
+        visited[node] = 1;
+        pathVisited[node] = 1;
+
+        for (auto adj : graph[node]) {
+            if (!visited[adj]) {
+                if (dfs(adj, n, graph, visited, pathVisited, check) == true) {
+                    check[adj] = 0;
+                    return true;
+                }
+            } else if (pathVisited[adj]) {
+                check[adj] = 0;
+                return true;
+            }
+        }
+
+        check[node] = 1;
+        pathVisited[node] = 0;
+
+        return false;
+    }
 public:
     vector<int> eventualSafeNodes(vector<vector<int>>& graph) {
         int n = graph.size();
-        vector<vector<int>> rGraph(n);
+        vector<int> visited(n, 0), pathVisited(n, 0), check(n, 0);
 
-        // Reverse the graph
-        for (int node = 0; node < n; ++node) {
-            for (int adj : graph[node]) {
-                rGraph[adj].push_back(node);
-            }
-        }
-
-        // Calculate in-degrees
-        vector<int> inDegree(n, 0);
-        for (int node = 0; node < n; ++node) {
-            for (int adj : rGraph[node]) {
-                inDegree[adj]++;
-            }
-        }
-
-        // Topological sort using queue
-        vector<int> ans;
-        queue<int> q;
         for (int i = 0; i < n; i++) {
-            if (inDegree[i] == 0) {
-                q.push(i);
+            if (!visited[i]) {
+                dfs(i, n, graph, visited, pathVisited, check);
             }
         }
 
-        while (!q.empty()) {
-            int node = q.front();
-            q.pop();
-            ans.push_back(node);
-
-            for (int adjNode : rGraph[node]) {
-                inDegree[adjNode]--;
-                if (inDegree[adjNode] == 0) {
-                    q.push(adjNode);
-                    
-                }
+        vector<int> safeNodes;
+        for (int i = 0; i < n; i++) {
+            if (check[i] == 1) {
+                safeNodes.push_back(i);
             }
         }
 
-        // Sort the answer list
-        sort(ans.begin(), ans.end());
-        return ans;
+        return safeNodes;
     }
 };
-
-//Reverse the graph
-//Calculate inGegree of all nodes
-//Do toposort from the nodes having inDegree 0
-//Print all nodes which is visited
