@@ -1,28 +1,32 @@
 class Solution {
 public:
     vector<int> luckyNumbers (vector<vector<int>>& matrix) {
-        int m = matrix.size(), n = matrix[0].size();
-        vector<int> luckyNumbers;
-        set<int> st;
+        int N = matrix.size(), M = matrix[0].size();
+        
+        int rMinMax = INT_MIN;
+        for (int i = 0; i < N; i++) {
 
-        for (int i = 0; i < m; i++) {
-            int mini = INT_MAX;
-            for (int j = 0; j < n; j++) {
-                mini = min(mini, matrix[i][j]);
+            int rMin = INT_MAX;
+            for (int j = 0; j < M; j++) {
+                rMin = min(rMin, matrix[i][j]);
             }
-            st.insert(mini);
+            rMinMax = max(rMinMax, rMin);
         }
+        
+        int cMaxMin = INT_MAX;
+        for (int i = 0; i < M; i++) {
 
-        for (int i = 0; i < n; i++) {
-            int maxi = 0;
-            for (int j = 0; j < m; j++) {
-                maxi = max(maxi, matrix[j][i]);
+            int cMax = INT_MIN;
+            for (int j = 0; j < N; j++) {
+                cMax = max(cMax, matrix[j][i]);
             }
-            if (st.find(maxi) != st.end()) {
-                luckyNumbers.push_back(maxi);
-            }
+            cMaxMin = min(cMaxMin, cMax);
         }
-
-        return luckyNumbers;
+        
+        if (rMinMax == cMaxMin) {
+            return {rMinMax};
+        }
+        
+        return {};
     }
 };
