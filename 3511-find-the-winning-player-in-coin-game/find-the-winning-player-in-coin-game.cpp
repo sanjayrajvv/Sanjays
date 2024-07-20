@@ -1,68 +1,31 @@
+#include <vector>
+#include <string>
+using namespace std;
+
 class Solution {
 private:
-    int total = 115;
-    int a = 75, b = 10;
-public:
-    string losingPlayer(int x, int y) {
-        bool alice = true;
-        while (1) {
-            if (alice) {
-                int curr_x = 0, curr_y = 0;
-                
-                bool flag = false;
-                for (int i = 0; i <= x; i++) {
-                    for (int j = 0; j <= y; j++) {
-                        int currTotal = a * i + b * j;
-                        if (currTotal == total) {
-                            flag = true;
-                            curr_x = i;
-                            curr_y = j;
-                            break;
-                        }
-                    }
-                    if (flag) {
-                        break;
-                    }
-                }
-                
-                if (flag) {
-                    x = x - curr_x;
-                    y = y - curr_y;
-                    
-                    alice = false;
-                } else {
-                    return "Bob";
-                }
-            } else {
-                int curr_x = 0, curr_y = 0;
-                
-                bool flag = false;
-                for (int i = 0; i <= x; i++) {
-                    for (int j = 0; j <= y; j++) {
-                        int currTotal = a * i + b * j;
-                        if (currTotal == total) {
-                            flag = true;
-                            curr_x = i;
-                            curr_y = j;
-                            break;
-                        }
-                    }
-                    if (flag) {
-                        break;
-                    }
-                }
-                
-                if (flag) {
-                    x = x - curr_x;
-                    y = y - curr_y;
-                    
-                    alice = true;
-                } else {
-                    return "Alice";
+    const int total = 115;
+    const int a = 75, b = 10;
+    
+    bool canWin(int x, int y, vector<vector<int>>& dp) {
+        if (x < 0 || y < 0) return false;
+        if (dp[x][y] != -1) return dp[x][y];
+
+        // Try all combinations of i and j to see if the current player can force a win
+        for (int i = 0; i <= x; ++i) {
+            for (int j = 0; j <= y; ++j) {
+                if (a * i + b * j == total && !canWin(x - i, y - j, dp)) {
+                    return dp[x][y] = true;
                 }
             }
         }
-        
-        return "Alice";
+
+        return dp[x][y] = false;
+    }
+    
+public:
+    string losingPlayer(int x, int y) {
+        vector<vector<int>> dp(x + 1, vector<int>(y + 1, -1));
+        return canWin(x, y, dp) ? "Alice" : "Bob";
     }
 };
