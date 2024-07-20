@@ -1,24 +1,23 @@
 class Solution {
 public:
-    vector<vector<int>> restoreMatrix(vector<int>& rowSum, 
-    vector<int>& colSum) {
-        int m = rowSum.size(), n = colSum.size();
-        vector<vector<int>> matrix(m, vector<int>(n, 0));
+    vector<vector<int>> restoreMatrix(vector<int>& rowSum,
+                                      vector<int>& colSum) {
+        int N = rowSum.size();
+        int M = colSum.size();
 
-        int i = 0, j = 0;
-        while (i < m && j < n) {
-            matrix[i][j] = min(rowSum[i], colSum[j]);
+        vector<int> currRowSum(N, 0);
+        vector<int> currColSum(M, 0);
 
-            rowSum[i] -= matrix[i][j];
-            colSum[j] -= matrix[i][j];
+        vector<vector<int>> origMatrix(N, vector<int>(M, 0));
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < M; j++) {
+                origMatrix[i][j] =
+                min(rowSum[i] - currRowSum[i], colSum[j] - currColSum[j]);
 
-            if (rowSum[i] == 0) {
-                i++;
-            } else {
-                j++;
-            }      
+                currRowSum[i] += origMatrix[i][j];
+                currColSum[j] += origMatrix[i][j];
+            }
         }
-
-        return matrix;
+        return origMatrix;
     }
 };
