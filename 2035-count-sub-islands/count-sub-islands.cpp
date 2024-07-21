@@ -12,6 +12,12 @@ private:
         vis[r][c] = 1;
         bool isSubIsland = true;
 
+        // If the current cell in grid2 is land but not in grid1, 
+        //it cannot be a sub-island.
+        if (!grid1[r][c]) {
+            isSubIsland = false;
+        }
+
         for (int i = 0; i < 4; i++) {
             int nr = r + delRow[i];
             int nc = c + delCol[i];
@@ -23,10 +29,7 @@ private:
             }
         }
 
-        // If the current cell in grid2 is land but not in grid1, it cannot be a sub-island.
-        if (!grid1[r][c]) {
-            isSubIsland = false;
-        }
+        
 
         return isSubIsland;
     }
