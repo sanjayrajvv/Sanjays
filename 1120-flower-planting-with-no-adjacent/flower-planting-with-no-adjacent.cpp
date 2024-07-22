@@ -1,59 +1,41 @@
-//Try out all colors on nodes using recursion
-//Create adjacency matrix
-//try planting each colors and if not possible then backtrack
-
 class Solution {
-    bool possible(int node, int col, vector<vector<int>> &adj, vector<int> &color) {
-        for (auto it : adj[node]) {
-            if (color[it] == col) return false;
-        }
-
-        return true;
-    }
-    vector<vector<int>> createAjacencyList(int n, vector<vector<int>>& paths) {
-        vector<vector<int>> adj(n + 1);
+private:
+    vector<vector<int>> createGraph(int n, vector<vector<int>>& paths) {
+        vector<vector<int>> graph(n + 1);  // Initialize with size n+1
 
         for (int i = 0; i < paths.size(); i++) {
-            int u = paths[i][0];
-            int v = paths[i][1];
+            int x = paths[i][0];
+            int y = paths[i][1];
 
-            adj[u].push_back(v);
-            adj[v].push_back(u);
+            graph[x].push_back(y);
+            graph[y].push_back(x);
         }
 
-        return adj;
+        return graph;
     }
-    bool graphColor(int node, int n, vector<vector<int>> &adj, vector<int> &color, vector<int> &ans) {
-        if (node > n) {
-            return true;
-        }
 
-        for (int col = 1; col <= 4; col++) {
-            if (possible(node, col, adj, color)) {
-                color[node] = col;
-                ans.push_back(col);
+public:
+    vector<int> gardenNoAdj(int n, vector<vector<int>>& paths) {
+        vector<vector<int>> graph = createGraph(n, paths);
+        vector<int> color(n, 0);  // Initialize with size n
 
-                if (graphColor(node + 1, n, adj, color, ans) == true) {
-                    return true;
+        for (int i = 1; i <= n; ++i) {
+            vector<bool> used(5, false);  // To check which colors are used by adjacent nodes
+
+            for (int neighbor : graph[i]) {
+                if (color[neighbor - 1] != 0) {
+                    used[color[neighbor - 1]] = true;
                 }
+            }
 
-                ans.pop_back();
-                color[node] = 0;
+            for (int col = 1; col <= 4; ++col) {
+                if (!used[col]) {
+                    color[i - 1] = col;
+                    break;
+                }
             }
         }
 
-        return false;
-    }
-public:
-    vector<int> gardenNoAdj(int n, vector<vector<int>>& paths) {
-        vector<vector<int>> adj = createAjacencyList(n, paths);
-
-        vector<int> color(n + 1, 0);
-
-        vector<int> ans;
-
-        graphColor(1, n, adj, color, ans);
-
-        return ans;
+        return color;
     }
 };
