@@ -17,25 +17,26 @@ private:
 public:
     vector<int> gardenNoAdj(int n, vector<vector<int>>& paths) {
         vector<vector<int>> graph = createGraph(n, paths);
-        vector<int> color(n, 0);  // Initialize with size n
+        vector<int> color(n + 1, 0);  // Initialize with size n+1
 
         for (int i = 1; i <= n; ++i) {
             vector<bool> used(5, false);  // To check which colors are used by adjacent nodes
 
             for (int neighbor : graph[i]) {
-                if (color[neighbor - 1] != 0) {
-                    used[color[neighbor - 1]] = true;
+                if (color[neighbor] != 0) {
+                    used[color[neighbor]] = true;
                 }
             }
 
             for (int col = 1; col <= 4; ++col) {
                 if (!used[col]) {
-                    color[i - 1] = col;
+                    color[i] = col;
                     break;
                 }
             }
         }
 
-        return color;
+        // Exclude the 0th element for 1-based indexing result
+        return vector<int>(color.begin() + 1, color.end());
     }
 };
