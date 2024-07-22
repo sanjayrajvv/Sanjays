@@ -1,26 +1,29 @@
 class Solution {
 public:
     vector<string> sortPeople(vector<string>& names, vector<int>& heights) {
-        int number_of_people = names.size();
+        int numberOfPeople = names.size();
 
-        // Create a map to store height-name pairs
-        unordered_map<int, string> height_to_name_map;
+        // Create a map to store height-name pairs (automatically sorted by
+        // height)
+        map<int, string> heightToNameMap;
 
         // Populate the map with height as key and name as value
-        for (int i = 0; i < number_of_people; i++) {
-            height_to_name_map[heights[i]] = names[i];
+        for (int i = 0; i < numberOfPeople; i++) {
+            heightToNameMap[heights[i]] = names[i];
         }
 
-        sort(heights.begin(), heights.end());
+        vector<string> sortedNames(numberOfPeople);
 
-        vector<string> sorted_names(number_of_people);
+        // Index for filling sortedNames vector from end to start
+        int currentIndex = numberOfPeople - 1;
 
-        // Populate sorted_names vector in descending order of height
-        for (int i = number_of_people - 1; i >= 0; i--) {
-            sorted_names[number_of_people - i - 1] =
-                height_to_name_map[heights[i]];
+        // Iterate through the map (sorted by height in ascending order)
+        // and fill the sortedNames vector from end to start
+        for (const auto& pair : heightToNameMap) {
+            sortedNames[currentIndex] = pair.second;
+            currentIndex--;
         }
 
-        return sorted_names;
+        return sortedNames;
     }
 };
