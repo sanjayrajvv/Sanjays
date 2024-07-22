@@ -1,29 +1,43 @@
 class Solution {
-public:
-    vector<bool> checkIfPrerequisite(int numCourses, vector<vector<int>>& prerequisites, vector<vector<int>>& queries) {
-        // Initialize a 2D vector to keep track of reachability
-        vector<vector<bool>> reachable(numCourses, vector<bool>(numCourses, false));
-        
-        // Fill the initial reachability based on prerequisites
-        for (const auto& prereq : prerequisites) {
-            reachable[prereq[0]][prereq[1]] = true;
+private:
+    vector<vector<int>> createGraph(int n, vector<vector<int>>& prerequisites) {
+        vector<vector<int>> graph(n);
+        for (const auto& pre : prerequisites) {
+            graph[pre[0]].push_back(pre[1]);
         }
-        
-        // Apply Floyd-Warshall algorithm to compute transitive closure
-        for (int k = 0; k < numCourses; ++k) {
-            for (int i = 0; i < numCourses; ++i) {
-                for (int j = 0; j < numCourses; ++j) {
-                    reachable[i][j] = reachable[i][j] || (reachable[i][k] && reachable[k][j]);
-                }
+        return graph;
+    }
+
+    bool dfs(int u, int target, vector<vector<int>>& graph, vector<vector<int>>& memo, vector<bool>& visited) {
+        if (u == target) {
+            return true;
+        }
+        if (memo[u][target] != -1) {
+            return memo[u][target];
+        }
+        visited[u] = true;
+        for (int v : graph[u]) {
+            if (!visited[v] && dfs(v, target, graph, memo, visited)) {
+                return memo[u][target] = true;
             }
         }
-        
-        // Answer the queries
+        visited[u] = false;
+        return memo[u][target] = false;
+    }
+
+public:
+    vector<bool> checkIfPrerequisite(int numCourses, vector<vector<int>>& prerequisites, vector<vector<int>>& queries) {
+        vector<vector<int>> graph = createGraph(numCourses, prerequisites);
+        vector<vector<int>> memo(numCourses, vector<int>(numCourses, -1));
         vector<bool> ans;
-        for (const auto& query : queries) {
-            ans.push_back(reachable[query[0]][query[1]]);
-        }
         
+        for (const auto& query : queries) {
+            int u = query[0];
+            int v = query[1];
+            vector<bool> visited(numCourses, false);
+            ans.push_back(dfs(u, v, graph, memo, visited));
+        }
+
         return ans;
     }
 };
