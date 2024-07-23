@@ -7,7 +7,7 @@ public:
             return false;
         }
 
-        map<int, int> mp;
+        unordered_map<int, int> mp;
         for (int i = 0; i < hand.size(); i++) {
             mp[hand[i]]++;
         }
