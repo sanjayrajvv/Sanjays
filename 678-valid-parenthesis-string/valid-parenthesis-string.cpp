@@ -28,7 +28,7 @@ public:
     bool checkValidString(string s) {
         int n = s.size();
 
-        vector<vector<int>> dp(n, vector<int>(n + 1, -1));
+        vector<vector<int>> dp(n, vector<int>(n, -1));
 
         return f(0, 0, s, dp);
     }
