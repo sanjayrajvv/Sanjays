@@ -3,7 +3,7 @@ public:
     int minDeletions(string s) {
         map<int, int> count;
         for (int i = 0; i < s.size(); i++) {
-            count[s[i] - 'a']++;
+            count[s[i]]++;
         }
 
         int numberOfDeletions = 0;
