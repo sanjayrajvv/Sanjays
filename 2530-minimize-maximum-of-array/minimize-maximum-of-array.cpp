@@ -6,7 +6,7 @@ public:
         
         for (int i = 1; i < nums.size(); i++) {
             total += nums[i];
-            int avg = ceil(double(total) / (i + 1));
+            int avg = (total + i) / (i + 1); // Avoid floating-point arithmetic
             res = max(res, avg);
         }
 
