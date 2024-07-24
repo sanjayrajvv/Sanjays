@@ -20,7 +20,7 @@ public:
             int minimum = i + minJump;
             int maximum = min(n, i + maxJump + 1); 
 
-            for (int j = max(minimum, farthest + 1); j < min(n, maximum); j++) {
+            for (int j = max(minimum, farthest + 1); j < maximum; j++) {
                 if (j <= farthest) continue;
                 if (s[j] == '0' && !vis[j]) {
                     q.push(j);
