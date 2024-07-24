@@ -14,7 +14,7 @@ public:
             int i = dq.front(); dq.pop_front();
             order[i] = j;
 
-            if (!dq.empty()) 
+            //if (!dq.empty()) 
                 dq.push_back(dq.front()); 
                 dq.pop_front();
         }
