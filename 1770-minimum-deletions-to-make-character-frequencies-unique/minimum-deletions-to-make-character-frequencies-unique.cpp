@@ -1,7 +1,7 @@
 class Solution {
 public:
     int minDeletions(string s) {
-        map<int, int> count;
+        unordered_map<int, int> count;
         for (int i = 0; i < s.size(); i++) {
             count[s[i]]++;
         }
