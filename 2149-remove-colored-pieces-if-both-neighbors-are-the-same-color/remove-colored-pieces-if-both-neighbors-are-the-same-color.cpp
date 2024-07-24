@@ -3,47 +3,25 @@ public:
     bool winnerOfGame(string colors) {
         int countAlice = 0;
         int countBob = 0;
+        int countA = 0;
+        int countB = 0;
 
-        // Count 'A's
-        int count = 0;
-        for (int i = 0; i < colors.size(); i++) {
-            if (colors[i] == 'A') {
-                count++;
-            } else {
-                if (count >= 3) {
-                    countAlice += count - 2;
+        for (char color : colors) {
+            if (color == 'A') {
+                countA++;
+                if (countA >= 3) {
+                    countAlice++;
                 }
-                count = 0;
-            }
-        }
-        if (count >= 3) {
-            countAlice += count - 2;
-        }
-
-        // Count 'B's
-        count = 0;
-        for (int i = 0; i < colors.size(); i++) {
-            if (colors[i] == 'B') {
-                count++;
-            } else {
-                if (count >= 3) {
-                    countBob += count - 2;
+                countB = 0;  // Reset B count
+            } else if (color == 'B') {
+                countB++;
+                if (countB >= 3) {
+                    countBob++;
                 }
-                count = 0;
+                countA = 0;  // Reset A count
             }
-        }
-        if (count >= 3) {
-            countBob += count - 2;
-        }
-
-        cout<<"Alice:"<<countAlice<<"Bob:"<<countBob;
-
-        if (countAlice == 0 || countAlice == countBob) {
-            return false;
         }
 
         return countAlice > countBob;
     }
 };
-//find how many Alice and Bob can remove
-//who can remover greater will win
