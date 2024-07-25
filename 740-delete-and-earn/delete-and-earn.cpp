@@ -30,7 +30,23 @@ public:
         }
 
         int n = v.size();
-        vector<int> dp(n, -1);
-        return f(n - 1, v, mp, dp);
+
+        vector<int> dp(n, 0);
+        dp[0] = mp[v[0]] * v[0];
+
+        for (int index = 1; index < n; index++) {
+            int pick = mp[v[index]] * v[index];
+            if (v[index - 1] != v[index] - 1) {
+                pick += dp[index - 1];
+            } else if (index > 1) {
+                pick += dp[index - 2];
+            }
+            
+            int notPick = dp[index - 1];
+            
+            dp[index] = max(pick, notPick);
+        }
+
+        return dp[n - 1];
     }
 };
