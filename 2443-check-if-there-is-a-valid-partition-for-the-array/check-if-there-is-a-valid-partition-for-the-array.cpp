@@ -14,30 +14,23 @@ private:
         }
         return false;
     }
-
-    bool f(int index, vector<int> &nums, vector<int> &dp) {
-        if (index == nums.size()) return true;
-        if (index > nums.size()) return false;
-
-        if (dp[index] != -1) return dp[index];
-
-        for (int i = index; i < min(index + 3, (int)nums.size()); i++) {
-            if (isGood(nums, index, i)) {
-                if (f(i + 1, nums, dp)) {
-                    return dp[index] = true;
-                }
-            }
-        }
-
-        return dp[index] = false;
-    }
 public:
     bool validPartition(vector<int>& nums) {
         int n = nums.size();
 
-        vector<int> dp(n + 1, -1);  // Change size to n+1
+        vector<bool> dp(n + 1, 0);  // Change size to n+1
         dp[n] = true;  // Initialize the end state as true
 
-        return f(0, nums, dp);
+        for (int index = n - 1; index >= 0; index--) {
+            for (int i = index; i < min(index + 3, (int)nums.size()); i++) {
+                if (isGood(nums, index, i)) {
+                    if (dp[i + 1]) {
+                        dp[index] = true;
+                    }
+                }
+            }
+        }
+
+        return dp[0];
     }
 };
