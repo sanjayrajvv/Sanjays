@@ -1,16 +1,7 @@
-#include <vector>
-#include <map>
-#include <algorithm>
-
-using namespace std;
-
 class Solution {
 private:
     int f(int index, vector<int> &v, map<int, int> &mp, vector<int> &dp) {
         if (index < 0) return 0;
-        if (index == 0) {
-            return mp[v[index]] * v[index];
-        }
         
         if (dp[index] != -1) return dp[index];
         
