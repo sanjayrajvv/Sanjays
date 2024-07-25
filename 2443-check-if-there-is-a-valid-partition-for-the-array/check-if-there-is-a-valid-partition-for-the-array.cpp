@@ -13,20 +13,28 @@ private:
 public:
     bool validPartition(vector<int>& nums) {
         int n = nums.size();
-        vector<bool> dp(n + 1, false);
-        dp[n] = true;
+        if (n < 2) return false;
+
+        // Initialize the last three dp values
+        bool dp1 = true;   // dp[n]
+        bool dp2 = false;  // dp[n-1]
+        bool dp3 = false;  // dp[n-2]
 
         for (int index = n - 1; index >= 0; --index) {
-            for (int len = 2; len <= 3; ++len) {
-                if (index + len <= n && isGood(nums, index, index + len - 1)) {
-                    if (dp[index + len]) {
-                        dp[index] = true;
-                        break; // Exit early since we found a valid partition
-                    }
-                }
+            bool current_dp = false;
+            if (index + 2 <= n && isGood(nums, index, index + 1)) {
+                current_dp = dp2;
             }
+            if (index + 3 <= n && isGood(nums, index, index + 2)) {
+                current_dp = current_dp || dp3;
+            }
+
+            // Shift dp values for the next iteration
+            dp3 = dp2;
+            dp2 = dp1;
+            dp1 = current_dp;
         }
 
-        return dp[0];
+        return dp1;
     }
 };
