@@ -1,22 +1,22 @@
 class Solution {
-private:
-    int f(int index, vector<int> &nums, vector<int> &dp) {
-        if (index < 0) return 0;
-        if (index == 0) return nums[index];
-
-        if (dp[index] != -1) return dp[index];
-
-        int pick = nums[index] + f(index - 2, nums, dp);
-        int notPick = f(index - 1, nums, dp);
-
-        return dp[index] = max(pick, notPick);
-    }
 public:
     int rob(vector<int>& nums) {
         int n = nums.size();
 
-        vector<int> dp(n, -1);
+        vector<int> dp(n, 0);
+        int dp1 = nums[0];
+        int dp2 = 0;
 
-        return f(n - 1, nums, dp);
+        for (int index = 1; index < n; index++) {
+            int pick = nums[index]; if (index > 1) pick += dp2;
+            int notPick = dp1;
+
+            int curr = max(pick, notPick);
+
+            dp2 = dp1;
+            dp1 = curr;
+        }
+
+        return dp1;
     }
 };
