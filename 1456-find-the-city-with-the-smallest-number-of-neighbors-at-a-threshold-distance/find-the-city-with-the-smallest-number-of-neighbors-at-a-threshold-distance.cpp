@@ -18,8 +18,9 @@ public:
         for (int k = 0; k < n; k++) {
             for (int i = 0; i < n; i++) {
                 for (int j = 0; j < n; j++) {
-                    if (A[i][k] != INT_MAX && A[k][j] != INT_MAX)
+                    if (A[i][k] != INT_MAX && A[k][j] != INT_MAX) {
                         A[i][j] = min(A[i][j], A[i][k] + A[k][j]);
+                    }
                 }
             }
         }
@@ -41,6 +42,5 @@ public:
         }
 
         return city;
-
     }
 };
