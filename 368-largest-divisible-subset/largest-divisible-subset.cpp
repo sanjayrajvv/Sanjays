@@ -1,37 +1,38 @@
 class Solution {
 public:
     vector<int> largestDivisibleSubset(vector<int>& nums) {
+        int n  = nums.size();
+        vector<int> dp(n, 1);
+        vector<int> hash(n);
+
         sort(nums.begin(), nums.end());
-        int n = nums.size();
 
-        vector<int> dp(n, 1), path(n);
-
-        int maxLength = 1, maxIndex = 0;
-        for (int i = 0; i < n; i++) {
-            path[i] = i;
-            for (int j = 0; j < i; j++) {
-                if (nums[i] % nums[j] == 0) {
-                    if ((1 + dp[j]) > dp[i]) {
-                        dp[i] = 1 + dp[j];
-                        path[i] = j;
-                    }
+        for (int index = 1; index < n; index++) {
+            hash[index] = index;
+            for (int prevIndex = 0; prevIndex < index; prevIndex++) {
+                if (nums[index] % nums[prevIndex] == 0 && 
+                ((1 + dp[prevIndex]) > dp[index])) {
+                    dp[index] = 1 + dp[prevIndex];
+                    hash[index] = prevIndex;
                 }
             }
+        }
 
-            if (dp[i] > maxLength) {
-                    maxLength = dp[i];
-                    maxIndex = i;
+        int len = INT_MIN;
+        int lastIndex = 0;
+        for (int i = 0; i < n; i++) {
+            if (dp[i] > len) {
+                len = dp[i];
+                lastIndex = i;
             }
         }
 
         vector<int> ans;
-        while (path[maxIndex] != maxIndex) {
-            ans.push_back(nums[maxIndex]);
-            maxIndex = path[maxIndex];
+        while (hash[lastIndex] != lastIndex) {
+            ans.push_back(nums[lastIndex]);
+            lastIndex = hash[lastIndex];
         }
-        ans.push_back(nums[maxIndex]);
-
-        reverse(ans.begin(), ans.end());
+        ans.push_back(nums[lastIndex]);
 
         return ans;
     }
