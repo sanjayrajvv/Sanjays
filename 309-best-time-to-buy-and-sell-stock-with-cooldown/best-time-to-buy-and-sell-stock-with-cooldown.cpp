@@ -1,31 +1,29 @@
 class Solution {
-private:
-    int f(int index, bool buy, vector<int> &prices, vector<vector<int>> &dp) {
-        if (index >= prices.size()) return 0;
-
-        if (dp[index][buy] != -1) return dp[index][buy];
-
-        int profit = 0;
-        if (buy) {
-            int buyToday = -prices[index] + f(index + 1, !buy, prices, dp);
-            int notBuyToday = f(index + 1, buy, prices, dp);
-
-            profit = max(buyToday, notBuyToday);
-        } else {
-            int sellToday = prices[index] + f(index + 2, !buy, prices, dp);
-            int notSellToday = f(index + 1, buy, prices, dp);
-
-            profit = max(sellToday, notSellToday);
-        }
-
-        return dp[index][buy] = profit;
-    }
 public:
     int maxProfit(vector<int>& prices) {
         int n = prices.size();
 
-        vector<vector<int>> dp(n, vector<int>(2, -1));
+        vector<vector<int>> dp(n + 2, vector<int>(2, 0));
 
-        return f(0, 1, prices, dp);
+        for (int index = n - 1; index >= 0; index--) {
+            for (int buy = 0; buy < 2; buy++) {
+                int profit = 0;
+                if (buy) {
+                    int buyToday = -prices[index] + dp[index + 1][!buy];
+                    int notBuyToday = dp[index + 1][buy];
+
+                    profit = max(buyToday, notBuyToday);
+                } else {
+                    int sellToday = prices[index] + dp[index + 2][!buy];
+                    int notSellToday = dp[index + 1][buy];
+
+                    profit = max(sellToday, notSellToday);
+                }
+
+                dp[index][buy] = profit;
+            }
+        }
+
+        return dp[0][1];
     }
 };
