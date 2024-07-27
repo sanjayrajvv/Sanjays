@@ -2,31 +2,32 @@ class Solution {
 public:
     int minimumMountainRemovals(vector<int>& nums) {
         int n = nums.size();
-        vector<int> dp1(n,1);
-        vector<int> dp2(n,1);
         
-        for(int i=0;i<n;i++){
-            for(int j=0;j<i;j++){
-                if(nums[i] > nums[j] && 1+dp1[j] > dp1[i])
-                    dp1[i] = 1+dp1[j];
+        vector<int> dp1(n, 1);
+        for (int index = 1; index < n; index++) {
+            for (int prevIndex = 0; prevIndex < index; prevIndex++) {
+                if (nums[prevIndex] < nums[index]) {
+                    dp1[index] = max(dp1[index], 1 + dp1[prevIndex]);
+                }
             }
         }
-        reverse(nums.begin(),nums.end());
-        
-        for(int i=0;i<n;i++){
-            for(int j=0;j<i;j++){
-                if(nums[i] > nums[j] && 1+dp2[j] > dp2[i])
-                    dp2[i] = 1+dp2[j];
+
+        vector<int> dp2(n, 1);
+        for (int index = n - 2; index >= 0; index--) {
+            for (int prevIndex = n - 1; prevIndex > index; prevIndex--) {
+                if (nums[prevIndex] < nums[index]) {
+                    dp2[index] = max(dp2[index], 1 + dp2[prevIndex]);
+                }
             }
         }
-        reverse(dp2.begin(),dp2.end());
-        int maxLen = 1;
-        for(int i=0;i<n;i++){
-            if(dp1[i]>1 && dp2[i]>1){
-                maxLen = max(dp1[i] + dp2[i] - 1, maxLen);
+
+        int longestBitonic = 0;
+        for (int i = 0; i < n; i++) {
+            if (dp1[i] > 1 && dp2[i] > 1) { // Ensure both sides of the peak are valid
+                longestBitonic = max(longestBitonic, dp1[i] + dp2[i] - 1);
             }
         }
-        
-        return n-maxLen;
+
+        return n - longestBitonic;
     }
 };
