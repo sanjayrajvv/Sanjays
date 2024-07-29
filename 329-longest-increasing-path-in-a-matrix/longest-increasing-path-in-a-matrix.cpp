@@ -10,12 +10,15 @@ private:
     int dfs(int r, int c, vector<vector<int>>& matrix, vector<vector<int>>& dp) {
         if (dp[r][c] != -1) return dp[r][c];
 
+        int m = matrix.size();
+        int n = matrix[0].size();
+
         int maxPath = 1;
         for (int i = 0; i < 4; i++) {
             int nr = r + delRow[i];
             int nc = c + delCol[i];
 
-            if (isBound(nr, nc, matrix.size(), matrix[0].size()) && 
+            if (isBound(nr, nc, m, n) && 
             matrix[nr][nc] > matrix[r][c]) {
                 maxPath = max(maxPath, 1 + dfs(nr, nc, matrix, dp));
             }
