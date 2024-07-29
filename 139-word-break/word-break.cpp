@@ -1,27 +1,31 @@
 class Solution {
-private:
-    int f(int i, string s, vector<string>& wordDict, vector<int> &dp) {
-        if (i < 0) return true;
+public:
+    bool wordBreak(string s, vector<string>& wordDict) {
+        unordered_set<string> words(wordDict.begin(), wordDict.end());
+        queue<int> queue;
+        vector<bool> seen(s.length(), false);
+        queue.push(0);
 
-        if (dp[i] != -1) return dp[i];
+        while (!queue.empty()) {
+            int start = queue.front();
+            queue.pop();
 
-        for (int index = i; index >= 0; index--) {
-            string word = s.substr(index, i - index + 1);
-            if (find(wordDict.begin(), wordDict.end(), word) != wordDict.end()) {
-                if (f(index - 1, s, wordDict, dp)) {
-                    return true;
+            if (start == s.length()) {
+                return true;
+            }
+
+            for (int end = start + 1; end <= s.length(); end++) {
+                if (seen[end]) {
+                    continue;
+                }
+
+                if (words.find(s.substr(start, end - start)) != words.end()) {
+                    queue.push(end);
+                    seen[end] = true;
                 }
             }
         }
 
-        return dp[i] = false;
-    }
-public:
-    bool wordBreak(string s, vector<string>& wordDict) {
-        int n = s.size();
-
-        vector<int> dp(n, -1);
-
-        return f(n - 1, s, wordDict, dp);
+        return false;
     }
 };
