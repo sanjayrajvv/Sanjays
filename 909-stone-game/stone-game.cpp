@@ -1,32 +1,26 @@
 class Solution {
 private:
-    bool f(int i, int j, bool turn, int alice, int bob, 
-    vector<int>& piles, vector<vector<vector<int>>> &dp) {
+    int f(int i, int j, vector<int>& piles, vector<vector<int>>& dp) {
         if (i > j) {
-            return alice > bob;
+            return 0;
         }
 
-        if (dp[i][j][turn] != -1) {
-            return dp[i][j][turn];
+        if (dp[i][j] != -1) {
+            return dp[i][j];
         }
 
-        if (turn) {
-            bool res = f(i + 1, j, !turn, alice + piles[i], bob, piles, dp) ||
-            f(i, j - 1, !turn, alice + piles[j], bob, piles, dp);
-            return dp[i][j][turn] = res;
-        } else {
-            bool res = f(i + 1, j, !turn, alice, bob + piles[i], piles, dp) || 
-            f(i, j - 1, !turn, alice, bob + piles[j], piles, dp);
-            return dp[i][j][turn] = res;
-        }
+        // Calculate the score difference if the current player picks i or j
+        int pickLeft = piles[i] - f(i + 1, j, piles, dp);
+        int pickRight = piles[j] - f(i, j - 1, piles, dp);
 
+        // Return the best option for the current player
+        return dp[i][j] = max(pickLeft, pickRight);
     }
+
 public:
     bool stoneGame(vector<int>& piles) {
         int n = piles.size();
-
-        vector<vector<vector<int>>> dp(n, vector<vector<int>>(n, vector<int>(2, -1)));
-
-        return f(0, n - 1, 0, 0, 0, piles, dp);
+        vector<vector<int>> dp(n, vector<int>(n, -1));
+        return f(0, n - 1, piles, dp) > 0;
     }
 };
