@@ -10,6 +10,6 @@ public:
             shift++;
         }
 
-        return (m << shift);
+        return (n << shift);
     }
 };
