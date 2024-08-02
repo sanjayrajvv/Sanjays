@@ -2,24 +2,15 @@ class Solution {
 public:
     int minSwaps(vector<int>& nums) {
         int n = nums.size();
-        int onesCount = 0;
 
-        for (int num : nums) {
-            if (num == 1) {
-                onesCount++;
-            }
-        }
+        int onesCount = count(nums.begin(), nums.end(), 1);
 
         //If there is no ones, then no swap required
         if (onesCount == 0) return 0;
 
-        int maxOnesInWindow = 0, currOnes = 0;
+        int maxOnesInWindow = 0;
         //Finding the number of ones in the current window
-        for (int i = 0; i < onesCount; i++) {
-            if (nums[i] == 1) {
-                currOnes++;
-            }
-        }
+        int currOnes = count(nums.begin(), nums.begin() + onesCount, 1);
         maxOnesInWindow = currOnes;
 
         for (int i = 1; i < n; i++) {
