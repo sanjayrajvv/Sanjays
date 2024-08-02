@@ -12,9 +12,7 @@ public:
 
             int count = 0;
             for (int val : setA) {
-                if (setB.find(val) != setB.end()) {
-                    count++;
-                }
+                count += setB.count(val);
             }
 
             prefix[i] = count;
