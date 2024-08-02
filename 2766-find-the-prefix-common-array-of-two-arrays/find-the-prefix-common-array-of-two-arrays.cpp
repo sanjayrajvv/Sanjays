@@ -4,13 +4,15 @@ public:
         int n = A.size();
         vector<int> prefix(n);
         
-        bitset<10001> seenA, seenB;  // Assuming elements in A and B are between 1 and 10000
+        bitset<50> seenA, seenB;  // Assuming elements in A and B are
+        //between 1 and 10000
         
         for (int i = 0; i < n; ++i) {
             seenA[A[i]] = 1;
             seenB[B[i]] = 1;
             
-            // Perform bitwise AND and count the number of set bits (common elements)
+            // Perform bitwise AND and count the number of set 
+            //bits (common elements)
             prefix[i] = (seenA & seenB).count();
         }
         
