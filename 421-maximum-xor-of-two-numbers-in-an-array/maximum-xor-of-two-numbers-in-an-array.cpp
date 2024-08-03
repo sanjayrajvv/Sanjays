@@ -2,21 +2,23 @@ struct Node {
     Node *links[2];
 
     bool containsKey(int bit) {
-        return (links[bit] != NULL);
-    }
-
-    Node *get(int bit) {
-        return links[bit];
+        return (links[bit] != nullptr);
     }
 
     void put(int bit, Node *node) {
         links[bit] = node;
     }
+
+    Node* get(int bit) {
+        return links[bit];
+    }
 };
 
 class Trie {
+private:
     Node *root;
-    public:
+
+public:
     Trie() {
         root = new Node();
     }
@@ -26,62 +28,46 @@ class Trie {
 
         for (int i = 31; i >= 0; i--) {
             int bit = (num >> i) & 1;
-            
             if (!node->containsKey(bit)) {
                 node->put(bit, new Node());
             }
-
             node = node->get(bit);
         }
     }
 
-    int getMax(int x) {
-        //1) Take the 32nd bit and check if the current node
-        //contains it's complement:
-		  //If complement present:
-				  //set 32nd bit 
-			//else leave it
-		//get next node
-		//do it for all
-
+    int getMax(int num) {
         Node *node = root;
-        int maxResult = 0;
+        int maxNum = 0;
 
         for (int i = 31; i >= 0; i--) {
-            int bit = (x >> i) & 1;
-
-            int complement = 1 - bit;
-            if (node->containsKey(complement)) {
-                maxResult = maxResult | (1 << i);
-
-                node = node->get(complement);
+            int bit = (num >> i) & 1;
+            if (node->containsKey(1 - bit)) {
+                maxNum = maxNum | (1 << i); //setting ith bit
+                node = node->get(1 - bit);
             } else {
                 node = node->get(bit);
             }
         }
 
-        return maxResult;
+        return maxNum;
     }
+
 };
 
 class Solution {
-    int maxXOR(vector<int> &arr1) {
+public:
+    int findMaximumXOR(vector<int>& nums) {
         Trie trie;
 
-        for (auto &it : arr1) {
-            trie.insert(it);
+        for (int& num : nums) {
+            trie.insert(num);
         }
 
         int maxi = 0;
-        for (auto &it : arr1) {
-            maxi = max(maxi, trie.getMax(it));
+        for (int& num : nums) {
+            maxi = max(maxi, trie.getMax(num));
         }
 
         return maxi;
-    }
-
-public:
-    int findMaximumXOR(vector<int>& nums) {
-        return maxXOR(nums);
     }
 };
