@@ -1,15 +1,22 @@
 class Solution {
 public:
     bool canBeEqual(vector<int>& target, vector<int>& arr) {
-        sort(target.begin(), target.end());
-        sort(arr.begin(), arr.end());
+        unordered_map<int, int> arrFreq;
+        for(int num : arr) {
+            arrFreq[num]++;
+        }
 
-        for (int i = 0; i < target.size(); i++) {
-            if (target[i] != arr[i]) {
+        for (int num : target) {
+            if (arrFreq.find(num) == arrFreq.end()) {
                 return false;
+            }
+
+            arrFreq[num]--;
+            if (arrFreq[num] == 0) {
+                arrFreq.erase(num);
             }
         }
 
-        return true;
+        return arrFreq.size() == 0;
     }
 };
