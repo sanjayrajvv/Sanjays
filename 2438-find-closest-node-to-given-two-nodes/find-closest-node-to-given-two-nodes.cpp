@@ -10,7 +10,7 @@ private:
             q.pop();
 
             int neighbor = edges[node];
-            if (neighbor != -1 && dis[neighbor] == INT_MAX) {
+            if (neighbor != -1 && dis[node] + 1 < dis[neighbor]) {
                 dis[neighbor] = dis[node] + 1;
                 q.push(neighbor);
             }
