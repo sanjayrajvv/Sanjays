@@ -2,8 +2,6 @@ class Solution {
 public:
     int minOperations(vector<int>& nums) {
         bool turn = true;
-        int ones = count(nums.begin(), nums.end(), 1);
-        int zeros = count(nums.begin(), nums.end(), 0);
         int operations = 0;
 
         for (int i = 0; i < nums.size(); i++) {
