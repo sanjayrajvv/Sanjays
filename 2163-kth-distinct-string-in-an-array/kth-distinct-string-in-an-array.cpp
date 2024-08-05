@@ -6,19 +6,12 @@ public:
             stringFreq[arr[i]]++;
         }
 
-        unordered_set<string> unique;
-        for (auto j : stringFreq) {
-            if (j.second == 1) {
-                unique.insert(j.first);
-            }
-        }
-
-        for (int i = 0; i < arr.size(); i++) {
-            if (unique.count(arr[i])) {
+        for (string& str : arr) {
+            if (stringFreq[str] == 1) {
                 k--;
-                if (k == 0) {
-                    return arr[i];
-                }
+            }
+            if (k == 0) {
+                return str;
             }
         }
 
