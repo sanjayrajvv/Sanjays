@@ -2,8 +2,8 @@ class Solution {
 public:
     string kthDistinct(vector<string>& arr, int k) {
         unordered_map<string, int> stringFreq;
-        for (int i = 0; i < arr.size(); i++) {
-            stringFreq[arr[i]]++;
+        for (string& str : arr) {
+            stringFreq[str]++;
         }
 
         for (string& str : arr) {
