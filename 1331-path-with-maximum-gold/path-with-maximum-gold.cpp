@@ -16,11 +16,11 @@ private:
             int nr = r + delRow[i];
             int nc = c + delCol[i];
 
-            maxGold = max(maxGold, dfsBacktrack(nr, nc, m, n, grid)); 
+            maxGold = max(maxGold, originalVal + dfsBacktrack(nr, nc, m, n, grid)); 
         }
 
         grid[r][c] = originalVal;
-        return maxGold + originalVal;
+        return maxGold; //+ originalVal;
     }
 public:
     int getMaximumGold(vector<vector<int>>& grid) {
