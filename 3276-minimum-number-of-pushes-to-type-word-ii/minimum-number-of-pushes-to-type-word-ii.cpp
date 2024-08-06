@@ -6,25 +6,17 @@ public:
             freq[c]++;
         }
 
-        vector<pair<int, char>> sortedFreq;
-        for (auto it : freq) {
-            sortedFreq.push_back({it.second, it.first});
+        priority_queue<pair<int, char>> maxHeap;
+        for (auto& it : freq) {
+            maxHeap.push({it.second, it.first});
         }
-        sort(sortedFreq.rbegin(), sortedFreq.rend()); 
 
         unordered_map<char, int> presses;
-        int press = 1;
-        for (auto it : sortedFreq) {
-            char c = it.second;
-            if (press <= 8) {
-                presses[c] = 1;
-            } else if (press <= 16) {
-                presses[c] = 2;
-            } else if (press <= 24) {
-                presses[c] = 3;
-            } else {
-                presses[c] = 4;
-            }
+        int press = 0;
+        while (!maxHeap.empty()) {
+            char c = maxHeap.top().second;
+            maxHeap.pop();
+            presses[c] = press / 8 + 1;
             press++;
         }
 
