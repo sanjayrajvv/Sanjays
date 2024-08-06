@@ -10,7 +10,7 @@ public:
         for (auto it : freq) {
             sortedFreq.push_back({it.second, it.first});
         }
-        sort(sortedFreq.rbegin(), sortedFreq.rend()); // Sort in descending order of frequency
+        sort(sortedFreq.rbegin(), sortedFreq.rend()); 
 
         unordered_map<char, int> presses;
         int press = 1;
