@@ -6,15 +6,8 @@ private:
         if (k[0] == '0' && k.size() > 1) return false; 
         // No leading zeros allowed unless the segment is "0"
 
-        int num = 0;
-        for (char c : k) {
-            //if (!isdigit(c)) return false; // Check if the character is a digit
-            num = num * 10 + (c - '0'); 
-            // Convert char to integer and accumulate the value
-            
-            if (num > 255) return false; 
-            // Immediately return false if it exceeds 255
-        }
+        double num = stod(k);
+        if (num > 255) return false; 
 
         return true;
     }
