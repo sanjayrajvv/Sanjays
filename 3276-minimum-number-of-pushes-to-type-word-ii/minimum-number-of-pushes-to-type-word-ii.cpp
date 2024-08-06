@@ -1,30 +1,25 @@
 class Solution {
 public:
     int minimumPushes(string word) {
-        unordered_map<char, int> freq;
-        for (char c : word) {
-            freq[c]++;
+        // Frequency vector to store count of each letter
+        vector<int> frequency(26, 0);
+
+        // Count occurrences of each letter
+        for (char& c : word) {
+            ++frequency[c - 'a'];
         }
 
-        priority_queue<pair<int, char>> maxHeap;
-        for (auto& it : freq) {
-            maxHeap.push({it.second, it.first});
+        // Sort frequencies in descending order
+        sort(frequency.rbegin(), frequency.rend());
+
+        int totalPushes = 0;
+
+        // Calculate total number of presses
+        for (int i = 0; i < 26; ++i) {
+            if (frequency[i] == 0) break;
+            totalPushes += (i / 8 + 1) * frequency[i];
         }
 
-        unordered_map<char, int> presses;
-        int press = 0;
-        while (!maxHeap.empty()) {
-            char c = maxHeap.top().second;
-            maxHeap.pop();
-            presses[c] = press / 8 + 1;
-            press++;
-        }
-
-        int totalPresses = 0;
-        for (char c : word) {
-            totalPresses += presses[c];
-        }
-
-        return totalPresses;
+        return totalPushes;
     }
 };
