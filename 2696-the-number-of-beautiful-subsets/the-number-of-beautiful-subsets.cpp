@@ -17,6 +17,7 @@ private:
 public:
     int beautifulSubsets(vector<int>& nums, int k) {
         unordered_map<int, int> count;
+        sort(nums.begin(), nums.end());
         return f(0, count, nums, k) - 1; //removing emopty substring
     }
 };
