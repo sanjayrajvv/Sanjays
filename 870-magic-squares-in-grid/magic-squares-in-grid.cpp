@@ -1,54 +1,38 @@
 class Solution {
 public:
     int numMagicSquaresInside(vector<vector<int>>& grid) {
-        int rows = grid.size();
-        int cols = grid[0].size();
-        int magicSquareCount = 0;
-
-        for (int r = 0; r < rows - 2; r++) {
-            for (int c = 0; c < cols - 2; c++) {
-                if (isMagicSquare(grid, r, c)) {
-                    magicSquareCount++;
+        int ans = 0;
+        int m = grid.size();
+        int n = grid[0].size();
+        for (int row = 0; row + 2 < m; row++) {
+            for (int col = 0; col + 2 < n; col++) {
+                if (isMagicSquare(grid, row, col)) {
+                    ans++;
                 }
             }
         }
-
-        return magicSquareCount;
+        return ans;
     }
 
-private:    
-    bool isMagicSquare(vector<vector<int>>& grid, int r, int c) {
-        unordered_set<int> elements;
+private:
+    bool isMagicSquare(vector<vector<int>>& grid, int row, int col) {
+        // The sequences are each repeated twice to account for
+        // the different possible starting points of the sequence
+        // in the magic square
+        string sequence = "2943816729438167";
+        string sequenceReversed = "7618349276183492";
 
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                int num = grid[r + i][c + j];
-                if (num < 1 || num > 9 || !elements.insert(num).second) {
-                    return false;
-                }
-            }
+        string border = "";
+        // Flattened indices for bordering elements of 3x3 grid
+        vector<int> borderIndices = {0, 1, 2, 5, 8, 7, 6, 3};
+        for (int i : borderIndices) {
+            int num = grid[row + i / 3][col + (i % 3)];
+            border += to_string(num);
         }
 
-        int sum = grid[r][c] + grid[r][c + 1] + grid[r][c + 2]; 
-
-        for (int i = 0; i < 3; i++) {
-            if (grid[r + i][c + 0] + grid[r + i][c + 1] + grid[r + i][c + 2] != sum) {
-                return false;
-            }
-
-            if (grid[r + 0][c + i] + grid[r + 1][c + i] + grid[r + 2][c + i] != sum) {
-                return false;
-            }
-        }
-
-        if (grid[r][c] + grid[r + 1][c + 1] + grid[r + 2][c + 2] != sum) {
-            return false;
-        }
-
-        if (grid[r + 2][c] + grid[r + 1][c + 1] + grid[r][c + 2] != sum) {
-            return false;
-        }
-
-        return true;
+        // Make sure the sequence starts at one of the corners
+        return (grid[row][col] % 2 == 0 && grid[row + 1][col + 1] == 5 &&
+                (sequence.find(border) != string::npos ||
+                 sequenceReversed.find(border) != string::npos));
     }
 };
