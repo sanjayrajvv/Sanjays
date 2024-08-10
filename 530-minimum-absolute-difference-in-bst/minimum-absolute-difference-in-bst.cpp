@@ -27,7 +27,7 @@ private:
         inOrderTraversal(node->left, prev, mini);
         
         if (prev != nullptr) {
-            mini = min(mini, abs(node->val - prev->val));
+            mini = min(mini, node->val - prev->val);
         }
         prev = node;
         
