@@ -12,20 +12,17 @@
 class Solution {  
 public:
     int rangeSumBST(TreeNode* root, int low, int high) {
-        inorder(root, low, high);
-
-        return sum;
-    }
-private:
-    int sum = 0;
-
-    void inorder(TreeNode* root, int low, int high) {
-        if (root != NULL) {
-            inorder(root->left, low, high);
-            if (root->val >= low && root->val <= high) {
-                sum += root->val;
-            }
-            inorder(root->right, low, high);
+        if (!root) {
+            return 0;
         }
+
+        if (root->val < low) {
+            return rangeSumBST(root->right, low, high);
+        } else if (root->val > high) {
+            return rangeSumBST(root->left, low, high);
+        }
+
+        return root->val + rangeSumBST(root->left, low, high) + 
+                           rangeSumBST(root->right, low, high);
     }
 };
