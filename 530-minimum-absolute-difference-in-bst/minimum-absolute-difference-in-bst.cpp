@@ -14,7 +14,9 @@ public:
     int getMinimumDifference(TreeNode* root) {
         int mini = INT_MAX;
         TreeNode* prev = nullptr;
+
         inOrderTraversal(root, prev, mini);
+        
         return mini;
     }
     
