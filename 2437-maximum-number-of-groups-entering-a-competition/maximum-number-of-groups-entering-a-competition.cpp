@@ -1,12 +1,19 @@
 class Solution {
 public:
     int maximumGroups(vector<int>& grades) {
-        int k = 0, n = grades.size();
-        
-        while ((k + 1) * (k + 2) / 2 <= n) {
-            k++;
+        int n = grades.size();
+        int l = 0, r = 1000;
+
+        while (l <= r) {
+            int k = l + (r - l) / 2;
+
+            if (k * (k + 1) / 2 > n) {
+                r = k - 1;
+            } else {
+                l = k + 1;
+            }
         }
 
-        return k;
+        return r;
     }
 };
