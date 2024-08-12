@@ -8,7 +8,7 @@ public:
             long long sum = mid * (mid + 1) / 2;
 
             if (sum == n) {
-                return (int)mid;
+                return mid;
             } else if (sum > n) {
                 h = mid - 1;
             } else {
