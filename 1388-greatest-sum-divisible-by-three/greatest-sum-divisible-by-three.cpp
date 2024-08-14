@@ -3,18 +3,20 @@ public:
     int maxSumDivThree(vector<int>& nums) {
         int n = nums.size();
 
-        vector<vector<int>> dp(n + 1, vector<int>(3, INT_MIN));
-        dp[n][0] = 0;
+        vector<int> curr(3, INT_MIN);
+        curr[0] = 0;
 
         for (int i = n - 1; i >= 0; i--) {
+            vector<int> next(curr);
             for (int remainder = 0; remainder < 3; remainder++) {
-                int take = nums[i] + dp[i + 1][(remainder + nums[i]) % 3];
-                int notTake = dp[i + 1][remainder];
+                int take = nums[i] + next[(remainder + nums[i]) % 3];
+                int notTake = next[remainder];
 
-                dp[i][remainder] = max(take, notTake);
+                curr[remainder] = max(take, notTake);
             }
+            next = curr;
         }
 
-        return dp[0][0];
+        return curr[0];
     }
 };
