@@ -1,19 +1,26 @@
+#define vi vector<int>
+
 class Solution {
 public:
     int minSteps(int n) {
-        int ans = 0;
-        for (int i = 2; i * i <= n; i++) {
-            if (n % i == 0) {
-                while (n % i == 0) {
-                    ans += i;
-                    n /= i;
-                }
-            }
-        }
-        if (n > 1) {
-            ans += n;  // Add the remaining prime factor if any
-        }
+        if (n == 1) return 0;
 
-        return ans;
+        vector<vi> dp(n, vi(n, -1));
+
+        return 1 + count(1, 1, n, dp);
+    }
+
+private:
+    int count(int i, int l, int n, vector<vi>& dp) {
+        if (i > n) return 1e9;
+
+        if (i == n) return 0;
+
+        if (dp[i][l] != -1) return dp[i][l];
+
+        int copy = 2 + count(i + i, i, n, dp);
+        int paste = 1 + count(i + l, l, n, dp);
+
+        return dp[i][l] = min(copy, paste);
     }
 };
