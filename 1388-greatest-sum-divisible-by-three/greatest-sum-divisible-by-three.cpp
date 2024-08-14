@@ -17,20 +17,4 @@ public:
 
         return dp[0][0];
     }
-
-private:
-    int f(int i, int remainder, vector<int>& nums, vector<vector<int>>& dp) {
-        if (i == nums.size()) {
-            return remainder == 0 ? 0 : INT_MIN;
-        }
-
-        if (dp[i][remainder] != -1) {
-            return dp[i][remainder];
-        }
-
-        int take = nums[i] + f(i + 1, (remainder + nums[i]) % 3, nums, dp);
-        int notTake = f(i + 1, remainder, nums, dp);
-
-        return dp[i][remainder] = max(take, notTake);
-    }
 };
