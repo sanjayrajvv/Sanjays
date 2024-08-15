@@ -4,12 +4,11 @@ public:
         int n = energy.size();
 
         int maxEnergy = INT_MIN;
+        vector<int> dp(n + k, 0);
 
         for (int i = n - 1; i >= 0; i--) {
-            if (i + k < n) {
-                energy[i] += energy[i + k];
-            }
-            maxEnergy = max(maxEnergy, energy[i]);
+            dp[i] =  dp[i + k] + energy[i];
+            maxEnergy = max(maxEnergy, dp[i]);
         }
 
         return maxEnergy;
