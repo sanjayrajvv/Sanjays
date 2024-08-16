@@ -3,20 +3,24 @@ public:
     int rob(vector<int>& nums) {
         int n = nums.size();
 
-        vector<int> dp(n, 0);
-        int dp1 = nums[0];
-        int dp2 = 0;
+        vector<int> dp(n, -1);
 
-        for (int index = 1; index < n; index++) {
-            int pick = nums[index]; if (index > 1) pick += dp2;
-            int notPick = dp1;
+        return f(0, nums, dp);
+    }
 
-            int curr = max(pick, notPick);
-
-            dp2 = dp1;
-            dp1 = curr;
+private:
+    int f(int i, vector<int>& nums, vector<int>& dp) {
+        if (i >= nums.size()) {
+            return 0;
         }
 
-        return dp1;
+        if (dp[i] != -1) {
+            return dp[i];
+        }
+
+        int notTake = f(i + 1, nums, dp);
+        int take = nums[i] + f(i + 2, nums, dp);
+
+        return dp[i] = max(take, notTake);
     }
 };
