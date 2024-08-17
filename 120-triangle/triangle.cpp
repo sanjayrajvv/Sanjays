@@ -3,22 +3,25 @@ public:
     int minimumTotal(vector<vector<int>>& triangle) {
         int n = triangle.size();
 
-        vector<int> next(n, 0);
-        for (int i = 0; i < n; i++) next[i] = triangle[n - 1][i];
+        vector<vector<int>> dp(n, vector<int>(n, -1));
 
-        for (int i = n - 2; i >= 0; i--) {
-            vector<int> curr(n, 0);
-            for (int j = i; j >= 0; j--) {
-                int down = (i + 1 > n) ? INT_MAX : next[j];
-                int diag = (i + 1 > n && j + 1 > n) ? INT_MAX :
-                next[j + 1];
+        return f(0, 0, triangle, dp);
+    }
 
-                curr[j] = triangle[i][j] + min(down, diag);
-            }
+private:
+    int f(int i, int j, vector<vector<int>>& triangle, 
+                        vector<vector<int>>& dp) {
+        if (i == triangle.size() - 1) {
+            return triangle[i][j];
+        }
 
-            next = curr;
-        } 
+        if (dp[i][j] != -1) {
+            return dp[i][j];
+        }
 
-        return next[0];
+        int down = f(i + 1, j, triangle, dp);
+        int right = f(i + 1, j + 1, triangle, dp);
+
+        return dp[i][j] = triangle[i][j] + min(down, right);
     }
 };
