@@ -1,41 +1,40 @@
 class Solution {
 public:
     long long maxPoints(vector<vector<int>>& points) {
-        int m = points.size();
-        int n = points[0].size();
-        vector<vector<long long>> dp(m, vector<long long>(n, 0));
-
-        // Initialize the dp array with the last row values
-        for (int j = 0; j < n; j++) {
-            dp[m-1][j] = points[m-1][j];
+        int m = points.size(), n = points[0].size();
+        vector<long long> prevRow(n);
+        for (int i = 0; i < n; i++) {
+            prevRow[i] = points[0][i];
         }
 
-        for (int i = m - 2; i >= 0; i--) {
-            vector<long long> left(n, 0), right(n, 0);
+        for (int row = 0; row < m - 1; ++row) {
+            vector<long long> leftMax(n);
+            vector<long long> rightMax(n);
+            vector<long long> currRow(n);
 
-            // Calculate left-to-right sweep
-            left[0] = dp[i+1][0];
-            for (int j = 1; j < n; j++) {
-                left[j] = max(left[j-1] - 1, dp[i+1][j]);
+            leftMax[0] = prevRow[0];
+            for (int col = 1; col < n; ++col) {
+                leftMax[col] = max(leftMax[col - 1] - 1, prevRow[col]);
             }
 
-            // Calculate right-to-left sweep
-            right[n-1] = dp[i+1][n-1];
-            for (int j = n - 2; j >= 0; j--) {
-                right[j] = max(right[j+1] - 1, dp[i+1][j]);
+            rightMax[n - 1] = prevRow[n - 1];
+            for (int col = n - 2; col >= 0; --col) {
+                rightMax[col] = max(rightMax[col + 1] - 1, prevRow[col]);
             }
 
-            // Update dp values for the current row
-            for (int j = 0; j < n; j++) {
-                dp[i][j] = points[i][j] + max(left[j], right[j]);
+            for (int col = 0; col < n; col++) {
+                currRow[col] = points[row + 1][col] + 
+                                  max(leftMax[col], rightMax[col]);
             }
+
+            prevRow = currRow;
         }
 
-        long long maxSum = 0;
-        for (int j = 0; j < n; j++) {
-            maxSum = max(maxSum, dp[0][j]);
+        long long maxPoints = 0;
+        for (int col = 0; col < n; ++col) {
+            maxPoints = max(maxPoints, prevRow[col]);
         }
 
-        return maxSum;
+        return maxPoints;
     }
 };
