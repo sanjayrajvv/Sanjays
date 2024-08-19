@@ -18,9 +18,9 @@ private:
 
         if (dp[i][l] != -1) return dp[i][l];
 
-        int copy = 2 + count(i + i, i, n, dp);
+        int copyPaste = 2 + count(i + i, i, n, dp);
         int paste = 1 + count(i + l, l, n, dp);
 
-        return dp[i][l] = min(copy, paste);
+        return dp[i][l] = min(copyPaste, paste);
     }
 };
