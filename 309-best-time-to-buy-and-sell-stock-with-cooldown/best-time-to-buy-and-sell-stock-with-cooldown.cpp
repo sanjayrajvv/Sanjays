@@ -3,30 +3,30 @@ public:
     int maxProfit(vector<int>& prices) {
         int n = prices.size();
 
-        vector<int> ahead1(2, 0), ahead2(2, 0);
-        vector<int> curr(2, 0);
+        vector<vector<int>> dp(n + 2, vector<int>(2, -1));
 
-        for (int index = n - 1; index >= 0; index--) {
-            for (int buy = 0; buy < 2; buy++) {
-                int profit = 0;
-                if (buy) {
-                    int buyToday = -prices[index] + ahead1[!buy];
-                    int notBuyToday = curr[buy];
+        return f(0, 1, prices, dp);
+    }
 
-                    profit = max(buyToday, notBuyToday);
-                } else {
-                    int sellToday = prices[index] + ahead2[!buy];
-                    int notSellToday = curr[buy];
+private:
+    int f(int index, bool buy, vector<int>& prices, vector<vector<int>>& dp) {
+        if (index >= prices.size()) return 0;
 
-                    profit = max(sellToday, notSellToday);
-                }
+        if (dp[index][buy] != -1) return dp[index][buy];
 
-                curr[buy] = profit;
-            }
-            ahead2 = ahead1;
-            ahead1 = curr;
+        int profit;
+        if (buy) {
+            int buyToday = -prices[index] + f(index + 1, !buy, prices, dp);
+            int notBuy = f(index + 1, buy, prices, dp);
+
+            profit = max(buyToday, notBuy);
+        } else {
+            int sellToday = prices[index] + f(index + 2, !buy, prices, dp);
+            int notSell = f(index + 1, buy, prices, dp);
+
+            profit = max(sellToday, notSell);
         }
 
-        return ahead1[1];
+        return dp[index][buy] = profit;
     }
 };
