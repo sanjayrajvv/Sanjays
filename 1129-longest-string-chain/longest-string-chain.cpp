@@ -1,42 +1,42 @@
 class Solution {
-private:
-    bool isPredecessor(string &a, string &b) {
-        if (a.size() + 1 != b.size()) return false;
-
-        int n1 = a.size(), n2 = b.size();
-        int i = 0, j = 0;
-        while (j < n2) {
-            if (i < n1 && a[i] == b[j]) {
-                i++;
-                j++;
-            } else {
-                j++;
-            }
-        }
-
-        if (i == n1 && j == n2) return true;
-        else return false;
-    }
 public:
     int longestStrChain(vector<string>& words) {
         int n = words.size();
 
-        sort(words.begin(), words.end(), [](const string &a, const string &b) {
+        sort(words.begin(), words.end(), [](const string& a, const string& b) {
             return a.size() < b.size();
         });
 
-        int len = 1;
         vector<int> dp(n, 1);
-        for (int index = 1; index < n; index++) {
+        int longest = 1;
+
+        for (int index = 0; index < n; index++) {
             for (int prevIndex = 0; prevIndex < index; prevIndex++) {
-                if (isPredecessor(words[prevIndex], words[index]) && 
-                (1 + dp[prevIndex] > dp[index])) {
-                    dp[index] = 1 + dp[prevIndex];
+                if (isPredecessor(words[index], words[prevIndex])) {
+                    dp[index] = max(dp[index], 1 + dp[prevIndex]);
                 }
             }
-            len = max(len, dp[index]);
+            longest = max(longest, dp[index]);
         }
 
-        return len;
+        return longest;
+    }
+
+private:
+    bool isPredecessor(string longer, string shorter) {
+        if (longer.size() != 1 + shorter.size()) return false;
+
+        int i = longer.size() - 1, j = shorter.size() - 1;
+
+        while (i >= 0) {
+            if (j >= 0 && longer[i] == shorter[j]) {
+                i--;
+                j--;
+            } else {
+                i--;
+            }
+        }
+
+        return j < 0;
     }
 };
