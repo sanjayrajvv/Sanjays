@@ -3,22 +3,26 @@ public:
     bool isMatch(string s, string p) {
         int m = s.size(), n = p.size();
 
-        vector<vector<bool>> dp(m + 1, vector<bool>(n + 1, false));
-        dp[m][n] = true;
+        vector<vector<int>> dp(m + 1, vector<int>(n + 1, -1));
 
-        for (int i = m; i >= 0; i--) {
-            for (int j = n - 1; j >= 0; j--) {
-                bool match = i < m && (s[i] == p[j] || p[j] == '.');
-                if (j + 1 < n && p[j + 1] == '*') {
-                    dp[i][j] = dp[i][j + 2] || (match && dp[i + 1][j]);
-                } else {
-                    if (match) {
-                        dp[i][j] = dp[i + 1][j + 1];
-                    }
-                }
-            }
+        return f(0, 0, s, p, dp);
+    }
+
+private:
+    bool f(int i, int j, string s, string p, vector<vector<int>>& dp) {
+        if (i >= s.size() && j >= p.size()) return true;
+        if (j >= p.size()) return false;
+
+        if (dp[i][j] != -1) return dp[i][j];
+
+        bool match = (i < s.size()) && (s[i] == p[j] || p[j] == '.');
+        if (j + 1 < p.size() && p[j + 1] == '*') {
+            return dp[i][j] = f(i, j + 2, s, p, dp) || 
+                              (match && f(i + 1, j, s, p, dp));
         }
 
-        return dp[0][0];
+        if (match) return dp[i][j] = f(i + 1, j + 1, s, p, dp);
+
+        return dp[i][j] = false;
     }
 };
