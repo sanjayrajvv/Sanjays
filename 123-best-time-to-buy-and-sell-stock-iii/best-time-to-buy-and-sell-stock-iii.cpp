@@ -3,29 +3,31 @@ public:
     int maxProfit(vector<int>& prices) {
         int n = prices.size();
 
-        vector<vector<vector<int>>> dp(n + 1, vector<vector<int>>(2, vector<int>(3, 0)));
+        vector<vector<vector<int>>> dp(n, vector<vector<int>>(2, vector<int>(3, -1)));
 
-        for (int index = n - 1; index >= 0; index--) {
-            for (int buy = 0; buy < 2; buy++) {
-                for (int count = 1; count <= 2; count++) {
-                    int profit = 0;
-                    if (buy) {
-                        int buyToday = -prices[index] + dp[index + 1][!buy][count];
-                        int notBuyToday = dp[index + 1][buy][count];
+        return f(0, 1, 2, prices, dp);
+    }
 
-                        profit = max(buyToday, notBuyToday);
-                    } else {
-                        int sellToday = prices[index] + dp[index + 1][!buy][count - 1];
-                        int notSellToday = dp[index + 1][buy][count];
+private:
+    int f(int index, bool buy, int count, 
+         vector<int>& prices, vector<vector<vector<int>>>& dp) {
+        if (count == 0 || index == prices.size()) return 0;
 
-                        profit = max(sellToday, notSellToday);
-                    }
+        if (dp[index][buy][count] != -1) return dp[index][buy][count];
 
-                    dp[index][buy][count] = profit;
-                }
-            }
+        int profit = 0;
+        if (buy) {
+            int buyToday = -prices[index] + f(index + 1, !buy, count, prices, dp);
+            int notBuy = f(index + 1, buy, count, prices, dp);
+
+            profit = max(buyToday, notBuy);
+        } else {
+            int sellToday = prices[index] + f(index + 1, !buy, count - 1, prices, dp);
+            int notSell = f(index + 1, buy, count, prices, dp);
+
+            profit = max(sellToday, notSell);
         }
 
-        return dp[0][1][2];
+        return dp[index][buy][count] = profit;
     }
 };
