@@ -1,31 +1,29 @@
 class Solution {
 public:
     int twoEggDrop(int n) {
-        vector<vector<int>> dp(3, vector<int>(n + 1, -1));
+        vector<vector<int>> dp(3, vector<int>(n + 1, 0));
 
-        return f(2, n, dp);
-    }
-
-private:
-    int f(int eggs, int floors, vector<vector<int>>& dp) {
-        if (floors == 0 || floors == 1) {
-            return floors;
+        for (int eggs = 0; eggs <= 2; eggs++) {
+            dp[eggs][0] = 0;
+            dp[eggs][1] = 1;
         }
 
-        if (eggs == 1) {
-            return floors;
+        for (int floors = 0; floors <= n; floors++) {
+            dp[1][floors] = floors;
         }
 
-        if (dp[eggs][floors] != -1) return dp[eggs][floors];
+        for (int eggs = 2; eggs <= 2; eggs++) {
+            for (int floors = 2; floors <= n; floors++) {
+                int minMoves = INT_MAX;
+                for (int x = 1; x <= floors; ++x) {
+                    int worstCase = max(dp[eggs - 1][x - 1], dp[eggs][floors - x]);
+                    minMoves = min(minMoves, worstCase + 1);
+                }
 
-        int minMoves = INT_MAX;
-        for (int x = 1; x <= floors; ++x) {
-            int worstCase = max(f(eggs - 1, x - 1, dp), 
-                                f(eggs, floors - x, dp));
-            minMoves = min(minMoves, worstCase + 1);
+                dp[eggs][floors] = minMoves;
+            }
         }
 
-        dp[eggs][floors] = minMoves;
-        return dp[eggs][floors];
+        return dp[2][n];
     }
 };
