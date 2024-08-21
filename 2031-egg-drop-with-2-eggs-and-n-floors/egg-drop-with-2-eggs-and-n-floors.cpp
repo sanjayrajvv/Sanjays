@@ -1,35 +1,31 @@
 class Solution {
 public:
     int twoEggDrop(int n) {
-        vector<vector<int>> memo(3, vector<int>(n + 1, -1));
-        return getMinimumMoves(2, n, memo);
+        vector<vector<int>> dp(3, vector<int>(n + 1, -1));
+
+        return f(2, n, dp);
     }
 
 private:
-    int getMinimumMoves(int eggs, int floors, vector<vector<int>>& memo) {
-        if (floors == 0) {
-            return 0;
+    int f(int eggs, int floors, vector<vector<int>>& dp) {
+        if (floors == 0 || floors == 1) {
+            return floors;
         }
-        if (floors == 1) {
-            return 1;
-        }
+
         if (eggs == 1) {
             return floors;
         }
-        if (memo[eggs][floors] != -1) {
-            return memo[eggs][floors];
-        }
+
+        if (dp[eggs][floors] != -1) return dp[eggs][floors];
 
         int minMoves = INT_MAX;
-
         for (int x = 1; x <= floors; ++x) {
-            int worstCaseMoves = max(getMinimumMoves(eggs - 1, x - 1, memo), 
-                                     getMinimumMoves(eggs, floors - x, memo));
-            
-            minMoves = min(minMoves, worstCaseMoves + 1);
+            int worstCase = max(f(eggs - 1, x - 1, dp), 
+                                f(eggs, floors - x, dp));
+            minMoves = min(minMoves, worstCase + 1);
         }
 
-        memo[eggs][floors] = minMoves;
-        return minMoves;
+        dp[eggs][floors] = minMoves;
+        return dp[eggs][floors];
     }
 };
