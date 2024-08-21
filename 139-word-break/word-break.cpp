@@ -2,30 +2,29 @@ class Solution {
 public:
     bool wordBreak(string s, vector<string>& wordDict) {
         unordered_set<string> words(wordDict.begin(), wordDict.end());
-        queue<int> queue;
-        vector<bool> seen(s.length(), false);
-        queue.push(0);
+        int n = s.size();
+        
+        // Memoization to store the results for subproblems
+        vector<int> dp(n + 1, -1);
+        
+        return f(n, s, words, dp);
+    }
 
-        while (!queue.empty()) {
-            int start = queue.front();
-            queue.pop();
-
-            if (start == s.length()) {
-                return true;
-            }
-
-            for (int end = start + 1; end <= s.length(); end++) {
-                if (seen[end]) {
-                    continue;
-                }
-
-                if (words.find(s.substr(start, end - start)) != words.end()) {
-                    queue.push(end);
-                    seen[end] = true;
+private:
+    bool f(int i, string s, unordered_set<string>& words, vector<int>& dp) {
+        if (i == 0) return true;  // Empty string can always be segmented
+        
+        if (dp[i] != -1) return dp[i];
+        
+        for (int index = i - 1; index >= 0; index--) {
+            string word = s.substr(index, i - index);
+            if (words.find(word) != words.end()) {
+                if (f(index, s, words, dp)) {
+                    return dp[i] = true;
                 }
             }
         }
 
-        return false;
+        return dp[i] = false;
     }
 };
