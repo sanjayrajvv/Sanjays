@@ -4,34 +4,28 @@ public:
         s = removeDuplicates(s);
 
         int n = s.size();
-        vector<vector<int>> dp(n, vector<int>(n, -1));
+        vector<vector<int>> dp(n + 1, vector<int>(n + 1, 0));
 
-        return minimumTurns(0, n - 1, s, dp);
-    }
+        for (int start = n - 1; start >= 0; start--) {
+            for (int end = 0; end < n; end++) {
+                if (start > end) continue;
 
-private:
-    int minimumTurns(int start, int end, string s, vector<vector<int>>& dp) {
-        if (start > end) {
-            return 0;
-        }
+                int minTurns = 1 + dp[start + 1][end];
+                for (int k = start + 1; k <= end; k++) {
+                    if (s[start] == s[k]) {
+                        int turnsWithMatch = dp[start][k - 1] + dp[k + 1][end];
+                        minTurns = min(minTurns, turnsWithMatch);
+                    }
+                }
 
-        if (dp[start][end] != -1) {
-            return dp[start][end];
-        }
-
-        int minTurns = 1 + minimumTurns(start + 1, end, s, dp);
-        for (int k = start + 1; k <= end; k++) {
-            if (s[start] == s[k]) {
-                int turnsWithMatch = minimumTurns(start, k - 1, s, dp) + 
-                                     minimumTurns(k + 1, end, s, dp);
-                minTurns = min(minTurns, turnsWithMatch);
+                dp[start][end] = minTurns;
             }
         }
 
-        dp[start][end] = minTurns;
-        return dp[start][end];
+        return dp[0][n - 1];
     }
 
+private:  
     string removeDuplicates(string s) {
         string unique = "";
 
