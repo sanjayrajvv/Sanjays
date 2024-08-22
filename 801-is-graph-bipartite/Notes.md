@@ -1,1 +1,1 @@
-<h2>is-graph-bipartite Notes</h2><hr>[ Time taken: 8 m 25 s ]
+<h2>is-graph-bipartite Notes</h2><hr>[ Time taken: 15 m 1 s ]
