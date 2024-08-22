@@ -3,49 +3,46 @@ public:
     vector<int> eventualSafeNodes(vector<vector<int>>& graph) {
         int n = graph.size();
 
-        vector<vector<int>> rGraph(n);
-        vector<int> inDegree(n, 0);
+        vector<int> vis(n, 0);
+        vector<int> pathVis(n, 0);
+        vector<int> check(n, 1);
 
         for (int i = 0; i < n; i++) {
-            for (int node : graph[i]) {
-                rGraph[node].push_back(i);
-                inDegree[i]++;
+            if (vis[i] == 0) {
+                dfs(i, graph, vis, pathVis, check);
             }
-        }
-
-        queue<int> q;
-        for (int i = 0; i < n; i++) {
-            if (inDegree[i] == 0) {
-                q.push(i);
-            }
-        }
-
-        vector<int> safe(n, 0);
-        while (!q.empty()) {
-            int node = q.front();
-            q.pop();
-
-            safe[node] = 1;
-
-            for (int nei : rGraph[node]) {
-                inDegree[nei]--;
-                if (inDegree[nei] == 0) {
-                    q.push(nei);
-                }
-            } 
         }
 
         vector<int> safeNodes;
         for (int i = 0; i < n; i++) {
-            if (safe[i] == 1) {
+            if (check[i] == 1) {
                 safeNodes.push_back(i);
             }
         }
 
         return safeNodes;
     }
-};
 
-//reverse the graph
-//calculate the inDegree
-//do topsort, return the visited nodes
+private:
+    bool dfs(int node, vector<vector<int>>& graph, vector<int>& vis, 
+                vector<int>& pathVis, vector<int>& check) {
+        vis[node] = 1;
+        pathVis[node] = 1;
+
+        for (int nei : graph[node]) {
+            if (vis[nei] == 0) {
+                if (dfs(nei, graph, vis, pathVis, check) == true) {
+                    check[node] = 0;
+                    return true;
+                }
+            } else if (pathVis[nei]) {
+                check[node] = 0;
+                return true;
+            }
+        }
+
+        pathVis[node] = 0;
+
+        return false;
+    }
+};
