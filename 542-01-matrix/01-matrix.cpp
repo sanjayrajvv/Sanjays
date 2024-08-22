@@ -1,45 +1,45 @@
 class Solution {
 public:
-    vector<vector<int>> updateMatrix(vector<vector<int>>& mat) {
-        int m = mat.size(), n = mat[0].size();
+    vector<vector<int>> updateMatrix(vector<vector<int>>& matrix) {
+        int m = matrix.size(), n = matrix[0].size();
+        vector<vector<int>> distance(m, vector<int>(n, 0));
+        vector<vector<int>> visited(m, vector<int>(n, 0));
+        queue<pair<pair<int, int>, int>> q;
 
-        //{r, c, steps}
-        queue<vector<int>> q;
-        vector<vector<int>> vis(m, vector<int>(n, 0));
-        vector<vector<int>> dis(m, vector<int>(n, 0));
-
-        for (int i = 0; i < m; i++) {
-            for (int j = 0; j < n; j++) {
-                if (mat[i][j] == 0) {
-                    q.push({i, j, 0});
-                    vis[i][j] = 1;
+        for (int r = 0; r < m; r++) {
+            for (int c = 0; c < n; c++) {
+                if (matrix[r][c] == 0) {
+                    q.push({{r, c}, 0});
+                    visited[r][c] = 1;
                 }
             }
         }
-
-        int delRow[] = {-1, 0, 1, 0};
-        int delCol[] = {0, 1, 0, -1};
 
         while (!q.empty()) {
-            int r = q.front()[0];
-            int c = q.front()[1];
-            int steps = q.front()[2];
+            auto [row, col] = q.front().first;
+            int steps = q.front().second;
             q.pop();
-
-            dis[r][c] = steps;
+            distance[row][col] = steps;
 
             for (int i = 0; i < 4; i++) {
-                int nr = r + delRow[i];
-                int nc = c + delCol[i];
+                int nrow = row + delRow[i];
+                int ncol = col + delCol[i];
 
-                if (nr >= 0 && nr < m && nc >= 0 && nc < n && !vis[nr][nc]) {
-                    vis[nr][nc] = 1;
-                    q.push({nr, nc, steps + 1});
+                if (isBound(nrow, ncol, m, n) && visited[nrow][ncol] == 0) {
+                    visited[nrow][ncol] = 1;
+                    q.push({{nrow, ncol}, steps + 1});
                 }
             }
-            
         }
 
-        return dis;
+        return distance;
+    }
+
+private:
+    int delRow[4] = {0, -1, 1, 0};
+    int delCol[4] = {1, 0, 0, -1};
+
+    bool isBound(int row, int col, int m, int n) {
+        return row >= 0 && row < m && col >= 0 && col < n;
     }
 };
