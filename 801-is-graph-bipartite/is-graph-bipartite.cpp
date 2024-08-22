@@ -1,29 +1,4 @@
 class Solution {
-private:
-    bool bfs(int i, vector<int> &color, vector<vector<int>>& graph) {
-        queue<pair<int, int>> q;
-        q.push({i, 0});
-        color[i] = 0;
-
-        while (!q.empty()) {
-            int node = q.front().first;
-            int col = q.front().second;
-            q.pop();
-
-            for (auto j : graph[node]) {
-                if (color[j] == -1) {
-                    color[j] = !col;
-                    q.push({j, !col});
-                } else {
-                    if (color[j] == col) {
-                        return false;
-                    }
-                }
-            }
-        }
-
-        return true;
-    }
 public:
     bool isBipartite(vector<vector<int>>& graph) {
         int n = graph.size();
@@ -31,9 +6,26 @@ public:
 
         for (int i = 0; i < n; i++) {
             if (color[i] == -1) {
-                if (bfs(i, color, graph) == false) {
+                if (dfs(i, 0, graph, color) == false) {
                     return false;
                 }
+            }
+        }
+
+        return true;
+    }
+
+private:
+    bool dfs(int node, int col, vector<vector<int>>& graph, vector<int>& color) {
+        color[node] = col;
+
+        for (int nei : graph[node]) {
+            if (color[nei] == -1) {
+                if (dfs(nei, !col, graph, color) == false) {
+                    return false;
+                }
+            } else if (color[nei] == col) {
+                return false;
             }
         }
 
