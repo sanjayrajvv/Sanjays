@@ -1,48 +1,43 @@
 class Solution {
-private:
-    bool isBound(int row, int col, int n) {
-        return row >= 0 && row < n && col >= 0 && col < n;
-    }
 public:
     int shortestPathBinaryMatrix(vector<vector<int>>& grid) {
+        if (grid[0][0] == 1) return -1;
+
         int n = grid.size();
+        vector<vector<int>> vis(n, vector<int>(n, 0));
+        queue<pair<pair<int, int>, int>> q;
 
-        if (grid[0][0] == 1 || grid[n - 1][n - 1] == 1) {
-            return -1;
-        }
-        
-        vector<vector<int>> distance(n, vector<int>(n, INT_MAX));
-        distance[0][0] = 0;
-        queue<vector<int>> q;
+        q.push({{0, 0}, 0});
+        vis[0][0] = 1;
 
-        q.push({0, 0, 0});
         while (!q.empty()) {
-            int dis = q.front()[0];
-            int r = q.front()[1];
-            int c = q.front()[2];
+            auto [row, col] = q.front().first;
+            int dis = q.front().second;
             q.pop();
 
-            if (r == n - 1 && c == n - 1) {
+            if (row == n - 1 && col == n - 1) {
                 return dis + 1;
             }
 
-            vector<pair<int, int>> directions = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}, 
-                          {1, 1}, {-1, -1}, {-1, 1}, {1, -1}};
-
             for (auto dir : directions) {
-                int nr = r + dir.first;
-                int nc = c + dir.second;
+                int nr = row + dir[0];
+                int nc = col + dir[1];
 
-                if (isBound(nr, nc, n)) {
-                    if (grid[nr][nc] == 0 && dis + 1 < distance[nr][nc]) {
-                        distance[nr][nc] = dis + 1;
-                        q.push({distance[nr][nc], nr, nc});
-                    }
+                if (isBound(nr, nc, n) && vis[nr][nc] == 0 && grid[nr][nc] == 0) {
+                    vis[nr][nc] = 1;
+                    q.push({{nr, nc}, dis + 1});
                 }
             }
         }
-        
-        if (distance[n - 1][n - 1] == INT_MAX) return -1;
-        else return distance[n - 1][n - 1] + 1;
+
+        return -1;
+    }
+
+private:
+    vector<vector<int>> directions = {{-1, 0}, {0, -1}, {0, 1}, {1, 0}, 
+    {-1, -1}, {1, 1}, {-1, 1}, {1, -1}};
+
+    bool isBound(int r, int c, int n) {
+        return r >= 0 && r < n && c >= 0 && c < n;
     }
 };
