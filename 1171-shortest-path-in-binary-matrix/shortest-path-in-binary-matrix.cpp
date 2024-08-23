@@ -4,28 +4,28 @@ public:
         if (grid[0][0] == 1) return -1;
 
         int n = grid.size();
-        vector<vector<int>> vis(n, vector<int>(n, 0));
-        queue<pair<pair<int, int>, int>> q;
+        vector<vector<int>> dis(n, vector<int>(n, INT_MAX));
+        queue<pair<int, int>> q;
 
-        q.push({{0, 0}, 0});
-        vis[0][0] = 1;
+        q.push({0, 0});
+        dis[0][0] = 0;
 
         while (!q.empty()) {
-            auto [row, col] = q.front().first;
-            int dis = q.front().second;
+            auto [row, col] = q.front();
             q.pop();
 
             if (row == n - 1 && col == n - 1) {
-                return dis + 1;
+                return dis[n - 1][n - 1] + 1;
             }
 
             for (auto dir : directions) {
                 int nr = row + dir[0];
                 int nc = col + dir[1];
 
-                if (isBound(nr, nc, n) && vis[nr][nc] == 0 && grid[nr][nc] == 0) {
-                    vis[nr][nc] = 1;
-                    q.push({{nr, nc}, dis + 1});
+                if (isBound(nr, nc, n) && grid[nr][nc] == 0 && 
+                dis[nr][nc] > 1 + dis[row][col]) {
+                    dis[nr][nc] = 1 + dis[row][col];
+                    q.push({nr, nc});
                 }
             }
         }
