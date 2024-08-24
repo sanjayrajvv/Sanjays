@@ -1,50 +1,55 @@
 class Solution {
-private:
-    vector<vector<pair<int, int>>> createGraph(int n, vector<vector<int>>& points) {
-        vector<vector<pair<int, int>>> graph(n);
-
-        for (int i = 0; i < n; i++) {
-            for (int j = i + 1; j < n; j++) {
-                int x1 = points[i][0], y1 = points[i][1];
-                int x2 = points[j][0], y2 = points[j][1];
-                int dis = abs(x1 - x2) + abs(y1 - y2);
-
-                graph[i].push_back({dis, j});
-                graph[j].push_back({dis, i});
-            }
-        }
-
-        return graph;
-    }
 public:
     int minCostConnectPoints(vector<vector<int>>& points) {
         int n = points.size();
+
         vector<vector<pair<int, int>>> graph = createGraph(n, points);
-        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
         vector<int> vis(n, 0);
 
-        int cost = 0;
+        priority_queue<pair<int, int>, vector<pair<int, int>>, 
+                                    greater<pair<int, int>>> pq;
+
         pq.push({0, 0});
+
+        int minimumCost = 0;
         while (!pq.empty()) {
-            int dis = pq.top().first;
-            int node = pq.top().second;
+            auto [weight, node] = pq.top();
             pq.pop();
 
-            if (vis[node]) continue;
-
+            if (vis[node]) {
+                continue;
+            }
+            
             vis[node] = 1;
-            cost += dis;
+            minimumCost += weight;
 
-            for (auto j : graph[node]) {
-                int adj = j.second;
-                int wt = j.first;
-
-                if (!vis[adj]) {
-                    pq.push({wt, adj});
+            for (auto [neighbor, edW] : graph[node]) {
+                if (vis[neighbor] == 0) {
+                    pq.push({edW, neighbor});
                 }
             }
         }
 
-        return cost;
+        return minimumCost;
+
+    }
+
+private:
+    vector<vector<pair<int, int>>> createGraph(int n, vector<vector<int>>& points) {
+        vector<vector<pair<int, int>>> graph(n);
+
+        for (int i = 0; i < points.size(); i++) {
+            for (int j = i + 1; j < points.size(); j++) {
+                int x1 = points[i][0]; int y1 = points[i][1];
+                int x2 = points[j][0]; int y2 = points[j][1];
+
+                int dis = abs(x1 - x2) + abs(y1 - y2);
+
+                graph[i].push_back({j, dis});
+                graph[j].push_back({i, dis});
+            }
+        }
+
+        return graph;
     }
 };
