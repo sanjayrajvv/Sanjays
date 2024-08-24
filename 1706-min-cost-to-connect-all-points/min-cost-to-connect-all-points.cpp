@@ -1,37 +1,74 @@
+class DisjointSet {
+private:
+    vector<int> parent;
+    vector<int> size;
+
+public:
+    DisjointSet(int n) {
+        parent.resize(n);
+        size.resize(n);
+
+        for (int i = 0; i < n; i++) {
+            parent[i] = i;
+            size[i] = 1;
+        }
+    }
+
+    int find(int u) {
+        if (u == parent[u]) {
+            return u;
+        }
+
+        return parent[u] = find(parent[u]);
+    }
+
+    void unionBySize(int u, int v) {
+        int up = find(u);
+        int vp = find(v);
+
+        if (up == vp) {
+            return;
+        }else if (size[up] < size[vp]) {
+            parent[up] = vp;
+            size[vp] += size[up];
+        } else {
+            parent[vp] = up;
+            size[up] += size[vp];
+        }
+    }
+};
+
 class Solution {
 public:
     int minCostConnectPoints(vector<vector<int>>& points) {
         int n = points.size();
 
         vector<vector<pair<int, int>>> graph = createGraph(n, points);
-        vector<int> vis(n, 0);
 
-        priority_queue<pair<int, int>, vector<pair<int, int>>, 
-                                    greater<pair<int, int>>> pq;
+        vector<pair<int, pair<int, int>>> edges;
 
-        pq.push({0, 0});
-
-        int minimumCost = 0;
-        while (!pq.empty()) {
-            auto [weight, node] = pq.top();
-            pq.pop();
-
-            if (vis[node]) {
-                continue;
+        for (int i = 0; i < n; i++) {
+            for (auto [adjN, weight] : graph[i]) {
+                edges.push_back({weight, {i, adjN}});
             }
-            
-            vis[node] = 1;
-            minimumCost += weight;
+        }
 
-            for (auto [neighbor, edW] : graph[node]) {
-                if (vis[neighbor] == 0) {
-                    pq.push({edW, neighbor});
-                }
+        sort(edges.begin(), edges.end());
+        DisjointSet ds(n);
+        int minimumCost = 0;
+
+        for (auto edge : edges) {
+            int weight = edge.first;
+            auto [u, v] = edge.second;
+
+            if (ds.find(u) != ds.find(v)) {
+                minimumCost += weight;
+
+                ds.unionBySize(u, v);
             }
         }
 
         return minimumCost;
-
     }
 
 private:
