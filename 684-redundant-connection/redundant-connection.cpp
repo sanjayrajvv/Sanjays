@@ -1,35 +1,38 @@
 class DisjointSet {
 private:
-    vector<int> rank;
     vector<int> parent;
+    vector<int> size;
+
 public:
     DisjointSet(int n) {
-        rank.resize(n, 0);
         parent.resize(n);
+        size.resize(n);
+
         for (int i = 0; i < n; i++) {
             parent[i] = i;
+            size[i] = 1;
         }
     }
 
     int find(int u) {
-        if (parent[u] == u) {
-            return u;
+        while (u != parent[u]) {
+            u = parent[u];
         }
-        return parent[u] = find(parent[u]);
+
+        return u;
     }
 
-    void unite(int u, int v) {
-        int root_u = find(u);
-        int root_v = find(v);
+    void unionBySize(int u, int v) {
+        int up = find(u);
+        int vp = find(v);
 
-        if (root_u != root_v) {
-            if (rank[root_u] > rank[root_v]) {
-                parent[root_v] = root_u;
-            } else if (rank[root_u] < rank[root_v]) {
-                parent[root_u] = root_v;
+        if (up != vp) {
+            if (size[up] < size[vp]) {
+                parent[up] = vp;
+                size[vp] += size[up];
             } else {
-                parent[root_v] = root_u;
-                rank[root_u]++;
+                parent[vp] = up;
+                size[up] += size[vp];
             }
         }
     }
@@ -41,7 +44,7 @@ public:
         int n = edges.size();
 
         DisjointSet ds(n + 1);
-        
+
         for (auto edge : edges) {
             int u = edge[0];
             int v = edge[1];
@@ -49,8 +52,7 @@ public:
             if (ds.find(u) == ds.find(v)) {
                 return edge;
             }
-
-            ds.unite(u, v);
+            ds.unionBySize(u, v);
         }
 
         return {};
