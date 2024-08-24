@@ -15,11 +15,11 @@ public:
     }
 
     int find(int u) {
-        if (u == parent[u]) {
-            return u;
+        while (u != parent[u]) {
+            u = parent[u];
         }
 
-        return parent[u] = find(parent[u]);
+        return u;
     }
 
     void unionBySize(int u, int v) {
