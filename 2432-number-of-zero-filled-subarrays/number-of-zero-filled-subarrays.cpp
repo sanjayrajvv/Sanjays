@@ -16,7 +16,7 @@ public:
             }
             i++;
         }
-        ans += (len * (len + 1)) / 2;
+        if (len > 0) ans += (len * (len + 1)) / 2;
 
         return ans;
     }
