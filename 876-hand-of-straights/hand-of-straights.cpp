@@ -3,12 +3,12 @@ public:
     bool isNStraightHand(vector<int>& hand, int groupSize) {
         int n = hand.size();
 
-        if (n % groupSize) {
+        if (n % groupSize != 0) {
             return false;
         }
 
         unordered_map<int, int> mp;
-        for (int i = 0; i < hand.size(); i++) {
+        for (int i = 0; i < n; i++) {
             mp[hand[i]]++;
         }
 
