@@ -10,17 +10,14 @@ public:
             }
         );
 
-        vector<int> dp(n, 1);  // dp[i] will store the length of the longest chain ending with the i-th pair
         int longestChain = 1;
+        int currEnd = pairs[0][1];
 
-        for (int index = 1; index < n; index++) {
-            for (int prevIndex = 0; prevIndex < index; prevIndex++) {
-                // Check if pairs[prevIndex] can chain to pairs[index]
-                if (pairs[prevIndex][1] < pairs[index][0]) {
-                    dp[index] = max(dp[index], 1 + dp[prevIndex]);
-                }
+        for (int i = 1; i < n; i++) {
+            if (currEnd < pairs[i][0]) {
+                longestChain++;
+                currEnd = pairs[i][1];
             }
-            longestChain = max(longestChain, dp[index]);
         }
 
         return longestChain;
