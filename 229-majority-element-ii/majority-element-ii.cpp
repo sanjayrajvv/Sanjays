@@ -1,7 +1,7 @@
 class Solution {
 public:
     std::vector<int> majorityElement(std::vector<int>& nums) {
-        int candidate1 = 0, candidate2 = 1; // Initialize to different values
+        int candidate1, candidate2; // Initialize to different values
         int count1 = 0, count2 = 0;
 
         // Step 1: Find potential candidates
@@ -36,6 +36,7 @@ public:
         if (count1 > n / 3) {
             result.push_back(candidate1);
         }
+        
         if (count2 > n / 3) {
             result.push_back(candidate2);
         }
