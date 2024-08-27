@@ -1,32 +1,42 @@
 class Solution {
 public:
     string minWindow(string s, string t) {
-        int m = s.size(), n = t.size();
+        unordered_map<char, int> countT, window;
 
-        vector<int> mp(256, 0);
+        int m = s.size(), n = t.size();
         for (int i = 0; i < n; i++) {
-            mp[t[i]]++;
+            countT[t[i]]++;
         }
 
-        int l = 0, r = 0, count = 0, si = -1, minLen = 1e9;
-        while (r < m) {
-            if (mp[s[r]] > 0) count++;
-            mp[s[r]]--;
+        int length = INT_MAX;
+        int startIndex = -1;
+        int count = 0, countNeeded = countT.size();
 
-            while (count == n) {
-                if ((r - l + 1) < minLen) {
-                    minLen = r - l + 1;
-                    si = l;
-                }
-
-                mp[s[l]]++;
-                if (mp[s[l]] > 0) count--;
-                l++;
+        int l = 0;
+        for (int r = 0; r < m; r++) {
+            if (countT.find(s[r]) != countT.end()) {
+                window[s[r]]++;
+                if (window[s[r]] == countT[s[r]]) count++;
             }
 
-            r++;
+            while (count == countNeeded) {
+                if ((r - l + 1) < length) {
+                    length = r - l + 1;
+                    startIndex = l;
+                }
+
+                if (countT.find(s[l]) != countT.end()) {
+                    window[s[l]]--;
+
+                    if (window[s[l]] < countT[s[l]]) {
+                        count--;
+                    }
+                }
+                l++;
+            }
         }
 
-        return si == - 1 ? "" : s.substr(si, minLen);
+        if (startIndex == -1) return "";
+        return s.substr(startIndex, length);
     }
 };
