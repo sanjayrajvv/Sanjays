@@ -1,32 +1,35 @@
 class Solution {
-    string createKey(string s) {
+public:
+    vector<vector<string>> groupAnagrams(vector<string>& strs) {
+        unordered_map<string, vector<string>> mp;
+
+        for (string s : strs) {
+            string key = generateKey(s);
+
+            mp[key].push_back(s);
+        }
+
+        vector<vector<string>> groupedAnagrams;
+        for (auto j : mp) {
+            groupedAnagrams.push_back(j.second);
+        }
+
+        return groupedAnagrams;
+    }
+
+private:
+    string generateKey(string s) {
         vector<int> count(26, 0);
 
-        for (int i = 0; i < s.size(); i++) {
-            count[s[i] - 'a']++;
+        for (char c : s) {
+            count[c - 'a']++;
         }
 
         string key = "";
-        for (int i = 0; i < count.size(); i++) {
+        for (int i = 0; i < 26; i++) {
             key += to_string(count[i]) + '#';
         }
 
         return key;
-    }
-public:
-    vector<vector<string>> groupAnagrams(vector<string>& strs) {
-        unordered_map<string, vector<string>> m;
-
-        for (int i = 0; i < strs.size(); i++) {
-            string key = createKey(strs[i]);
-            m[key].push_back(strs[i]);
-        }
-
-        vector<vector<string>> ans;
-        for (auto it : m) {
-            ans.push_back(it.second);
-        }
-
-        return ans;
     }
 };
