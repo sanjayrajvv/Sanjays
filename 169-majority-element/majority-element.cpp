@@ -12,8 +12,10 @@ public:
             if (count == 0) {
                 candidate = num;
                 count = 1;
+            } else if (candidate == num) {
+                count++;
             } else {
-                count += (candidate == num) ? 1 : -1;
+                count--;
             }
         }
 
