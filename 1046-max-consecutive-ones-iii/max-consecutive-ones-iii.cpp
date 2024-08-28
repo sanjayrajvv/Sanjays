@@ -16,7 +16,7 @@ public:
                 i++;
             }
 
-            maxLen = max(maxLen, j - i + 1);
+            if (zeros <= k) maxLen = max(maxLen, j - i + 1);
             
             j++;
         }
