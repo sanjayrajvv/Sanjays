@@ -14,9 +14,7 @@ public:
                 l++;
             }
 
-            if (cost <= maxCost) {
-                maxLength = max(maxLength, r - l + 1);
-            }
+            maxLength = max(maxLength, r - l + 1);
         }
 
         return maxLength;
