@@ -8,7 +8,7 @@ public:
             while (!st.empty() && st.top() > 0 && a < 0) {
                 if (abs(st.top()) < abs(a)) {
                     st.pop();
-                } else if (abs(st.top()) == abs(a)) {
+                } else if (abs(st.top()) == abs(a)){
                     st.pop();
                     collision = true;
                     break;
