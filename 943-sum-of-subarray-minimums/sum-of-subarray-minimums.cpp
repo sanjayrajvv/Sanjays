@@ -1,32 +1,29 @@
 class Solution {
 private:
-    int MOD = 1e9 + 7;
+    static constexpr int MOD = 1e9 + 7;
 
 public:
     int sumSubarrayMins(vector<int>& arr) {
+        vector<int> nse = findNextSmallerElements(arr); // Next smaller element index
+        vector<int> pse = findPreviousSmallerOrEqualElements(arr); // Previous smaller or equal to element index
 
-        vector<int> nse = findNSE(arr); //next smaller element index
-        vector<int> pse = findPSEE(arr); //previous smaller or equal to element index
-
-        int totalCount = 0;
-        for (int i = 0; i < arr.size(); i++) {
+        long long totalCount = 0;
+        for (int i = 0; i < arr.size(); ++i) {
             int left = i - pse[i];
             int right = nse[i] - i;
-
-            totalCount = (totalCount + ((long long)left * right * arr[i]) % MOD) % MOD;
+            totalCount = (totalCount + static_cast<long long>(left) * right * arr[i]) % MOD;
         }
 
-        return totalCount;
+        return static_cast<int>(totalCount);
     }
 
 private:
-    vector<int> findNSE(vector<int>& arr) {
+    vector<int> findNextSmallerElements(const vector<int>& arr) {
         int n = arr.size();
-
-        vector<int> nse(n, n);
+        vector<int> nse(n, n); // Default to n (out of bounds)
 
         stack<int> st;
-        for (int i = n - 1; i >= 0; i--) {
+        for (int i = n - 1; i >= 0; --i) {
             while (!st.empty() && arr[i] <= arr[st.top()]) {
                 st.pop();
             }
@@ -39,13 +36,12 @@ private:
         return nse;
     }
 
-    vector<int> findPSEE(vector<int>& arr) {
+    vector<int> findPreviousSmallerOrEqualElements(const vector<int>& arr) {
         int n = arr.size();
-
-        vector<int> pse(n, -1);
+        vector<int> pse(n, -1); // Default to -1 (out of bounds)
 
         stack<int> st;
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < n; ++i) {
             while (!st.empty() && arr[i] < arr[st.top()]) {
                 st.pop();
             }
