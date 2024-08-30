@@ -14,9 +14,8 @@ public:
             st.push(num[i]);
         }
 
-        while (k > 0 && !st.empty()) {
+        while (k--) {
             st.pop();
-            k--;
         }
 
         string ans = "";
