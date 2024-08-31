@@ -14,11 +14,6 @@ public:
             if ((r - l + 1) - maxFrequency > k) {
                 h[s[l] - 'A']--;
                 l++;
-
-                maxFrequency = 0;
-                for (int i = 0; i < 26; i++) {
-                    maxFrequency = max(maxFrequency, h[i]);
-                }
             }
 
             if ((r - l + 1) - maxFrequency <= k) {
