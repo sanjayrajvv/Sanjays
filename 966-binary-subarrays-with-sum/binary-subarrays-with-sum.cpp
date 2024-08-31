@@ -1,10 +1,11 @@
 class Solution {
 public:
     int numSubarraysWithSum(vector<int>& nums, int goal) {
-        int numLessOrEqualToGoal = countSubarrays(nums, goal);
-        int numLessThanGoal = countSubarrays(nums, goal - 1);
+        int numSubarrayLessThanOrEqual = countSubarrays(nums, goal);
+        int numSubarrayLessThan = countSubarrays(nums, goal - 1);
 
-        return numLessOrEqualToGoal - numLessThanGoal;
+        int numSubarrayEqual = numSubarrayLessThanOrEqual - numSubarrayLessThan;
+        return numSubarrayEqual;
     }
 
 private:
@@ -12,8 +13,8 @@ private:
         if (goal < 0) return 0;
 
         int n = nums.size();
-
         int totalCount = 0;
+
         int l = 0, sum = 0;
         for (int r = 0; r < n; r++) {
             sum += nums[r];
