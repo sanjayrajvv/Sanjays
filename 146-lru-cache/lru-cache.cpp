@@ -1,29 +1,31 @@
 class Node {
 public:
     int key, val;
-    Node *prev, *next;
+    Node* prev;
+    Node* next;
 
-    Node(int key, int val) {
+public:
+    Node(int key, int value) {
         this->key = key;
-        this->val = val;
-
-        prev = NULL;
-        next = NULL;
+        this->val = value;
+        prev = nullptr;
+        next = nullptr;
     }
 };
 
 class LRUCache {
-    Node *head;
-    Node *tail;
-    
-    map<int, Node*> m;
-    int n;
+private:
+    Node* head;
+    Node* tail;
+    unordered_map<int, Node*> nodeAddress;
+    int capacity;
+
 public:
     LRUCache(int capacity) {
-        n = capacity;
+        this->capacity = capacity;
         head = new Node(-1, -1);
         tail = new Node(-1, -1);
-
+        
         head->next = tail;
         tail->prev = head;
     }
@@ -38,11 +40,11 @@ public:
     }
     
     int get(int key) {
-        if (m.find(key) == m.end()) {
+        if (nodeAddress.find(key) == nodeAddress.end()) {
             return -1;
         }
 
-        Node *node = m[key];
+        Node* node = nodeAddress[key];
         int value = node->val;
 
         removeNode(node);
@@ -52,45 +54,40 @@ public:
     }
     
     void put(int key, int value) {
-        if (m.find(key) != m.end()) {
-            Node *node = m[key];
+        if (nodeAddress.find(key) != nodeAddress.end()) {
+            Node* node = nodeAddress[key];
             node->val = value;
 
             removeNode(node);
             addNode(node);
         } else {
-            if (m.size() == n) {
-                Node *lru = tail->prev;
+            if (nodeAddress.size() == capacity) {
+                Node* lru = tail->prev;
+
                 removeNode(lru);
-                m.erase(lru->key);
+                nodeAddress.erase(lru->key);
                 delete lru;
             }
 
-            Node *new_node = new Node(key, value);
-            addNode(new_node);
-            m[key] = new_node;
+            Node* newNode = new Node(key, value);
+            addNode(newNode);
+            nodeAddress[key] = newNode;
         }
     }
 
 private:
-    void addNode(Node *node) {
-        Node *temp = head->next;
+    void addNode(Node* node) {
+        Node* temp = head->next;
         head->next = node;
+        node->prev = head;
         node->next = temp;
         temp->prev = node;
-        node->prev = head;
     }
 
-    void removeNode(Node *node) {
-        node->prev->next = node->next;
-        node->next->prev = node->prev;
+    void removeNode(Node* node) {
+        Node* prev = node->prev;
+        Node* next = node->next;
+        prev->next = next;
+        next->prev = prev;
     }
-
 };
-
-/**
- * Your LRUCache object will be instantiated and called as such:
- * LRUCache* obj = new LRUCache(capacity);
- * int param_1 = obj->get(key);
- * obj->put(key,value);
- */
