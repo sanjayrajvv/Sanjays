@@ -28,9 +28,7 @@ public:
         }
 
         ListNode* deleteNode = l->next;
-        if (l->next != nullptr) {
-            l->next = l->next->next;
-        }
+        l->next = l->next->next;
 
         delete deleteNode;
 
