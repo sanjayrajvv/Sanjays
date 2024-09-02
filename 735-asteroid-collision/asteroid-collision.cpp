@@ -1,6 +1,7 @@
 class Solution {
 public:
     vector<int> asteroidCollision(vector<int>& asteroids) {
+        int n = asteroids.size();
         stack<int> st;
 
         for (int a : asteroids) {
@@ -8,7 +9,7 @@ public:
             while (!st.empty() && st.top() > 0 && a < 0) {
                 if (abs(st.top()) < abs(a)) {
                     st.pop();
-                } else if (abs(st.top()) == abs(a)){
+                } else if (abs(st.top()) == abs(a)) {
                     st.pop();
                     collision = true;
                     break;
@@ -17,7 +18,7 @@ public:
                     break;
                 }
             }
-            if (!collision) {
+            if (collision == false) {
                 st.push(a);
             }
         }
