@@ -1,30 +1,33 @@
 class Solution {
 private:
-    static constexpr int MOD = 1e9 + 7;
+    int MOD = 1e9 + 7;
 
 public:
     int sumSubarrayMins(vector<int>& arr) {
-        vector<int> nse = findNextSmallerElements(arr); // Next smaller element index
-        vector<int> pse = findPreviousSmallerOrEqualElements(arr); // Previous smaller or equal to element index
+        int n = arr.size();
 
-        long long totalCount = 0;
-        for (int i = 0; i < arr.size(); ++i) {
-            int left = i - pse[i];
-            int right = nse[i] - i;
-            totalCount = (totalCount + static_cast<long long>(left) * right * arr[i]) % MOD;
+        vector<int> nse = findNextSmallerElement(arr);
+        vector<int> psee = findPrevSmallerEqualElement(arr);
+
+        int totalCount = 0;
+        for (int i = 0; i < n; i++) {
+            long  left = i - psee[i];
+            long right = nse[i] - i;
+
+            totalCount = (totalCount + left * right * arr[i]) % MOD;
         }
 
-        return static_cast<int>(totalCount);
+        return totalCount;
     }
 
 private:
-    vector<int> findNextSmallerElements(const vector<int>& arr) {
+    vector<int> findNextSmallerElement(vector<int>& arr) {
         int n = arr.size();
-        vector<int> nse(n, n); // Default to n (out of bounds)
-
+        vector<int> nse(n, n);
         stack<int> st;
-        for (int i = n - 1; i >= 0; --i) {
-            while (!st.empty() && arr[i] <= arr[st.top()]) {
+
+        for (int i = n - 1; i >= 0; i--) {
+            while (!st.empty() && arr[st.top()] >= arr[i]) {
                 st.pop();
             }
             if (!st.empty()) {
@@ -36,21 +39,21 @@ private:
         return nse;
     }
 
-    vector<int> findPreviousSmallerOrEqualElements(const vector<int>& arr) {
+    vector<int> findPrevSmallerEqualElement(vector<int>& arr) {
         int n = arr.size();
-        vector<int> pse(n, -1); // Default to -1 (out of bounds)
-
+        vector<int> psee(n, -1);
         stack<int> st;
-        for (int i = 0; i < n; ++i) {
-            while (!st.empty() && arr[i] < arr[st.top()]) {
+
+        for (int i = 0; i < n; i++) {
+            while (!st.empty() && arr[st.top()] > arr[i]) {
                 st.pop();
             }
             if (!st.empty()) {
-                pse[i] = st.top();
+                psee[i] = st.top();
             }
             st.push(i);
         }
 
-        return pse;
+        return psee;
     }
 };
