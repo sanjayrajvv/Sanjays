@@ -33,9 +33,9 @@ public:
                 return parent1 != parent2; 
             }
 
-            if ((parent1 && !parent2) || (!parent1 && parent2)) {
+            /*if ((parent1 && !parent2) || (!parent1 && parent2)) {
                 return false; 
-            }
+            }*/
         }
 
         return false;
