@@ -10,20 +10,21 @@
  * };
  */
 class Solution {
-    void inorder(TreeNode *root) {
-        if (root) {
-            TreeNode *temp = root->left;
-            root->left = root->right;
-            root->right = temp;
-            
-            inorder(root->left);
-            inorder(root->right);
-        }
-    }
 public:
     TreeNode* invertTree(TreeNode* root) {
-        inorder(root);
-
+        invert(root);
         return root;
+    }
+
+private:
+    void invert(TreeNode* root) {
+        if (root == nullptr) return;
+
+        TreeNode* temp = root->left;
+        root->left = root->right;
+        root->right = temp;
+
+        invert(root->left);
+        invert(root->right);
     }
 };
