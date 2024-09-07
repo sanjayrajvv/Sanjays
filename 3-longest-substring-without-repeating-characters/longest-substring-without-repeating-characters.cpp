@@ -12,6 +12,8 @@ public:
                 l = max(l, mp[s[r]] + 1);
             }
 
+            cout << l << " " << r << endl; 
+
             mp[s[r]] = r;
             maxLen = max(maxLen, r - l + 1);
         }
