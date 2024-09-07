@@ -10,20 +10,23 @@
  * };
  */
 class Solution {
-    int check(TreeNode *root) {
-        if (root == NULL) return 0;
-
-        int lh = check(root->left);
-        int rh = check(root->right);
-
-        if (lh == -1 || rh == -1) return -1;
-        if (abs(rh - lh) > 1) return -1;
-
-        return 1 + max(lh, rh);
-    }
 public:
     bool isBalanced(TreeNode* root) {
-        if (check(root) == -1) return false;
-        else return true;
+        if (dfs(root) == -1) return false;
+        return true;
+    }
+
+private:
+    int dfs(TreeNode* node) {
+        if (node == nullptr) return 0;
+
+        int lh = dfs(node->left);
+        int rh = dfs(node->right);
+
+        if (lh == -1 || rh == -1) return -1;
+
+        if (abs(lh - rh) > 1) return -1;
+
+        return 1 + max(lh, rh);
     }
 };
