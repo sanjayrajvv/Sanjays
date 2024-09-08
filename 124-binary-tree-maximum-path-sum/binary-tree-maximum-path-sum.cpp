@@ -10,22 +10,24 @@
  * };
  */
 class Solution {
-    int f(TreeNode *root, int &maxPath) {
-        if (root == NULL) return 0;
-
-        int l = max(0, f(root->left, maxPath));
-        int r = max(0, f(root->right, maxPath));
-
-        maxPath = max(maxPath, root->val + l + r);
-
-        return root->val + max(l, r);
-    }
 public:
     int maxPathSum(TreeNode* root) {
-        int maxPath = INT_MIN;
+        int maxi = INT_MIN;
 
-        f(root, maxPath);
+        dfs(root, maxi);
 
-        return maxPath;
+        return maxi;
+    }
+
+private:
+    int dfs(TreeNode* node, int& maxi) {
+        if (node == nullptr) return 0;
+
+        int l = max(0, dfs(node->left, maxi));
+        int r = max(0, dfs(node->right, maxi));
+
+        maxi = max(maxi, node->val + l + r);
+
+        return (node->val) + max(l, r);
     }
 };
