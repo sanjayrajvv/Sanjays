@@ -3,8 +3,12 @@ public:
     int hammingWeight(int n) {
         int hammingWeight = 0;
 
-        for (int i = 31; i >= 0; i--) {
-            hammingWeight += (n >> i) & 1;
+        while (n != 0) {
+            int bit = n & 1;
+            if (bit) {
+                hammingWeight++;
+            }
+            n >>= 1;
         }
 
         return hammingWeight;
