@@ -2,14 +2,21 @@ class Solution {
 public:
     int singleNumber(vector<int>& nums) {
         int n = nums.size();
-        sort(nums.begin(), nums.end());
+        int ans = 0;
 
-        for (int i = 0; i < n - 3; i += 3) {
-            if (nums[i] != nums[i + 1]) {
-                return nums[i];
+        for (int bit = 0; bit < 32; bit++) {
+            int count = 0;
+            for (int i = 0; i < n; i++) {
+                if (nums[i] & (1 << bit)) {
+                    count++;
+                }
+            }
+
+            if (count % 3 != 0) {
+                ans |= (1 << bit);
             }
         }
 
-        return nums[n - 1];
+        return ans;
     }
 };
