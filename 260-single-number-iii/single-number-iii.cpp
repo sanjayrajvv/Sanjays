@@ -6,19 +6,17 @@ public:
             xXor ^= nums[i];
         }
 
-        // Finding the rightmost set bit
-        int rightMost = xXor & -xXor;
-
-        int b1 = 0, b2 = 0;
+        int rightMost = xXor & -xXor; //(xXor & xXor - 1) & xXor;
+        int bucket1 = 0, bucket2 = 0;
 
         for (int i = 0; i < nums.size(); i++) {
             if (nums[i] & rightMost) {
-                b1 ^= nums[i];
+                bucket1 ^= nums[i];
             } else {
-                b2 ^= nums[i];
+                bucket2 ^= nums[i];
             }
         }
 
-        return {b1, b2};
+        return {bucket1, bucket2};
     }
 };
