@@ -6,7 +6,7 @@ public:
         for (int i = 0; i < n; i++) {
             missing = missing ^ nums[i];
         }
-        for (int i = 0; i <= n; i++) {
+        for (int i = 1; i <= n; i++) {
             missing = missing ^ i;
         }
 
