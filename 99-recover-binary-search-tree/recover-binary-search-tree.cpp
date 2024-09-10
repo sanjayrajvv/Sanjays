@@ -1,34 +1,42 @@
 class Solution {
 private:
-    int index;
+    TreeNode* firstNode;
+    TreeNode* prevNode;
+    TreeNode* middleNode;
+    TreeNode* secondNode;
 
 public:
-    // O(2n + nlogn)
     void recoverTree(TreeNode* root) {
-        vector<int> inorderList;
-        inorder(root, inorderList); //O(n)
+        firstNode = nullptr;
+        middleNode = nullptr;
+        secondNode = nullptr;
+        prevNode = new TreeNode(INT_MIN);
+        
+        inorder(root);
 
-        sort(inorderList.begin(), inorderList.end()); //O(nlogn)
-
-        index = 0;
-        recover(root, inorderList); // O(n)
-    }
-
-private:
-    void inorder(TreeNode* root, vector<int>& inorderList) {
-        if (root != nullptr) {
-            inorder(root->left, inorderList);
-            inorderList.push_back(root->val);
-            inorder(root->right, inorderList);
+        if (secondNode != nullptr) {
+            swap(firstNode->val, secondNode->val);
+        } else {
+            swap(firstNode->val, middleNode->val);
         }
     }
 
-    void recover(TreeNode* root, vector<int>& inorderList) {
+private:
+    void inorder(TreeNode* root) {
         if (root != nullptr) {
-            recover(root->left, inorderList);
-            root->val = inorderList[index];
-            index++;
-            recover(root->right, inorderList);
+            inorder(root->left);
+
+            if (root->val < prevNode->val) {
+                if (firstNode == nullptr) {
+                    firstNode = prevNode;
+                    middleNode = root;
+                } else {
+                    secondNode = root;
+                }
+            } 
+
+            prevNode = root;
+            inorder(root->right);
         }
     }
 };
