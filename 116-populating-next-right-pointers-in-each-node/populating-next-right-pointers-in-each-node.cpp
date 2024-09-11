@@ -15,21 +15,37 @@ public:
         : val(_val), left(_left), right(_right), next(_next) {}
 };
 */
+
 class Solution {
 public:
     Node* connect(Node* root) {
-        if (root == NULL) return root;
+        if (root == nullptr) {
+            return nullptr;
+        }
+        
+        queue<Node*> q;
+        q.push(root);
 
-        Node *next = root;
+        while (!q.empty()) {
+            Node* prevNode = nullptr;
+            int size = q.size();
 
-        while (next) {
-            Node *curr = next;
-            next = next->left;
-            while (curr) {
-                if (curr->left) curr->left->next = curr->right;
-                if (curr->right && curr->next) curr->right->next = curr->next->left;
-                
-                curr = curr->next;
+            for (int i = 0; i < size; i++) {
+                Node* currNode = q.front();
+                q.pop();
+
+                if (prevNode != nullptr) {
+                    prevNode->next = currNode;
+                }
+
+                prevNode = currNode;
+
+                if (currNode->left) {
+                    q.push(currNode->left);
+                }
+                if (currNode->right) {
+                    q.push(currNode->right);
+                }
             }
         }
 
