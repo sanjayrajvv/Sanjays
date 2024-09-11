@@ -22,31 +22,24 @@ public:
         if (root == nullptr) {
             return nullptr;
         }
-        
-        queue<Node*> q;
-        q.push(root);
 
-        while (!q.empty()) {
-            Node* prevNode = nullptr;
-            int size = q.size();
+        Node* levelStart = root;
+        while (levelStart != nullptr) {
+            Node* current = levelStart;
 
-            for (int i = 0; i < size; i++) {
-                Node* currNode = q.front();
-                q.pop();
-
-                if (prevNode != nullptr) {
-                    prevNode->next = currNode;
+            while (current != nullptr) {
+                if (current->left != nullptr) {
+                    current->left->next = current->right;
                 }
 
-                prevNode = currNode;
+                if (current->right != nullptr && current->next != nullptr) {
+                    current->right->next = current->next->left;
+                }
 
-                if (currNode->left) {
-                    q.push(currNode->left);
-                }
-                if (currNode->right) {
-                    q.push(currNode->right);
-                }
+                current = current->next;
             }
+
+            levelStart = levelStart->left;
         }
 
         return root;
