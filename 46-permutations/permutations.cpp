@@ -1,23 +1,32 @@
 class Solution {
-private:
-    void f(int index, vector<int> &nums, vector<vector<int>> &ans) {
-        if (index == nums.size()) {
-            ans.push_back(nums);
-            return;
-        }
-
-        for (int i = index; i < nums.size(); i++) {
-            swap(nums[index], nums[i]);
-            f(index + 1, nums, ans);
-            swap(nums[i], nums[index]);
-        }
-    }
 public:
     vector<vector<int>> permute(vector<int>& nums) {
         vector<vector<int>> ans;
+        vector<int> ds;
+        unordered_map<int, bool> taken;
 
-        f(0, nums, ans);
+        backtrack(nums, ds, ans, taken);
 
         return ans;
+    }
+
+private:
+    void backtrack(vector<int>& nums, vector<int>& ds, 
+                    vector<vector<int>>& ans, unordered_map<int, bool>& taken) {
+        if (ds.size() == nums.size()) {
+            ans.push_back(ds);
+            return;
+        }
+
+        for (int i = 0; i < nums.size(); i++) {
+            if (taken[i] == false) {
+                taken[i] = true;
+                ds.push_back(nums[i]);
+                backtrack(nums, ds, ans, taken);
+
+                taken[i] = false;
+                ds.pop_back(); 
+            }
+        }
     }
 };
