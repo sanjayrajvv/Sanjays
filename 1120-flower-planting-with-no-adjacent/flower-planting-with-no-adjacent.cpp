@@ -1,42 +1,53 @@
 class Solution {
-private:
-    vector<vector<int>> createGraph(int n, vector<vector<int>>& paths) {
-        vector<vector<int>> graph(n + 1);  // Initialize with size n+1
-
-        for (int i = 0; i < paths.size(); i++) {
-            int x = paths[i][0];
-            int y = paths[i][1];
-
-            graph[x].push_back(y);
-            graph[y].push_back(x);
-        }
-
-        return graph;
-    }
-
 public:
     vector<int> gardenNoAdj(int n, vector<vector<int>>& paths) {
-        vector<vector<int>> graph = createGraph(n, paths);
-        vector<int> color(n + 1, 0);  // Initialize with size n+1
+        vector<vector<int>> graph(n + 1);
+        for (auto path : paths) {
+            int u = path[0];
+            int v = path[1];
 
-        for (int i = 1; i <= n; ++i) {
-            vector<bool> used(5, false);  // To check which colors are used by adjacent nodes
+            graph[u].push_back(v);
+            graph[v].push_back(u);
+        }
 
-            for (int neighbor : graph[i]) {
-                if (color[neighbor] != 0) {
-                    used[color[neighbor]] = true;
+        vector<int> color(n + 1, 0);
+        vector<int> answer;
+
+        backtrack(1, n, graph, color, answer);
+
+        return answer;
+    }
+
+    bool backtrack(int node, int n, vector<vector<int>>& graph, 
+                vector<int>& color, vector<int>& answer) {
+        if (node > n) {
+            return true;
+        }
+
+        for (int col = 1; col <= 4; col++) {
+            if (isPossible(node, col, graph, color)) {
+                color[node] = col;
+                answer.push_back(col);
+
+                if (backtrack(node + 1, n, graph, color, answer) == true) {
+                    return true;
                 }
-            }
 
-            for (int col = 1; col <= 4; ++col) {
-                if (!used[col]) {
-                    color[i] = col;
-                    break;
-                }
+                answer.pop_back();
+                color[node] = 0;
             }
         }
 
-        // Exclude the 0th element for 1-based indexing result
-        return vector<int>(color.begin() + 1, color.end());
+        return false;
+    }
+
+    bool isPossible(int node, int col, vector<vector<int>>& graph, vector<int>& color) {
+        for (auto nei : graph[node]) {
+            if (color[nei] == col) {
+                return false;
+            }
+        }
+
+        return true;
     }
 };
