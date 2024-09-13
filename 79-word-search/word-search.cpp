@@ -1,42 +1,12 @@
 class Solution {
-private:
-    bool dfs(int r, int c, vector<vector<char>> &board, int m, int n, 
-    int index, string word) {
-        if (r < 0 || c < 0 || r >= m || c >= n 
-        || board[r][c] != word[index]) {
-            return false;
-        }
-
-        if (index == word.size() - 1) {
-            return true;
-        }
-
-        char temp = board[r][c];
-        board[r][c] = '#';
-
-        int delRow[] = {-1, 0, 1, 0};
-        int delCol[] = {0, 1, 0, -1};
-        for (int i = 0; i < 4; i++) {
-            int nr = r + delRow[i];
-            int nc = c + delCol[i];
-
-            if (dfs(nr, nc, board, m, n, index + 1, word)) {
-                return true;
-            }
-        }
-
-        board[r][c] = temp;
-
-        return false;
-    }
 public:
     bool exist(vector<vector<char>>& board, string word) {
         int m = board.size(), n = board[0].size();
 
-        for (int i = 0; i < m; i++) {
-            for (int j = 0; j < n; j++) {
-                if (board[i][j] == word[0]) {
-                    if (dfs(i, j, board, m, n, 0, word)) {
+        for (int row = 0; row < m; row++) {
+            for (int col = 0; col < n; col++) {
+                if (board[row][col] == word[0]) {
+                    if (dfs(row, col, 0, word, board) == true) {
                         return true;
                     }
                 }
@@ -45,4 +15,37 @@ public:
 
         return false;
     }
+
+private:
+    bool dfs(int row, int col, int index, string word, vector<vector<char>>& board) {
+        int m = board.size(), n = board[0].size();
+
+        if (row < 0 || row >= m || col < 0 || col >= n || 
+            board[row][col] != word[index]) {
+            return false;
+        }
+
+        if (index == word.size() - 1) {
+            return true;
+        }
+
+        char temp = board[row][col];
+        board[row][col] = '#';
+
+        for (int i = 0; i < 4; i++) {
+            int nrow = row + delRow[i];
+            int ncol = col + delCol[i];
+
+            if (dfs(nrow, ncol, index + 1, word, board) == true) {
+                return true;
+            } 
+        }
+
+        board[row][col] = temp;
+
+        return false;
+    }
+
+    int delRow[4] = {-1, 0, 1, 0};
+    int delCol[4] = {0, 1, 0, -1};
 };
