@@ -11,16 +11,16 @@ public:
     }
 
 private:
-    void backtrack(int col, int n, vector<string>& board, vector<vector<string>>& ans) {
-        if (col == n) {
+    void backtrack(int row, int n, vector<string>& board, vector<vector<string>>& ans) {
+        if (row == n) {
             ans.push_back(board);
             return;
         }
 
-        for (int row = 0; row < n; row++) {
+        for (int col = 0; col < n; col++) {
             if (isSafe(row, col, board)) {
                 board[row][col] = 'Q';
-                backtrack(col + 1, n, board, ans);
+                backtrack(row + 1, n, board, ans);
                 board[row][col] = '.';
             }
         }
@@ -39,18 +39,18 @@ private:
         }
 
         r = row, c = col;
-        while (c >= 0) {
+        while (r >= 0) {
             if (board[r][c] == 'Q') return false;
 
-            c--;
+            r--;
         }
 
         r = row, c = col;
-        while (r < n && c >= 0) {
+        while (r >= 0 && c < n) {
             if (board[r][c] == 'Q') return false;
 
-            r++;
-            c--;
+            r--;
+            c++;
         }
 
         return true;
