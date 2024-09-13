@@ -1,26 +1,13 @@
 class Solution {
-private:
-    void dfs(int index, string digits, unordered_map<char, string> m, 
-    string s, vector<string> &ans) {
-        if (index == digits.size()) {
-            ans.push_back(s);
-            return;
-        }
-
-        string str = m[digits[index]];
-        for (int i = 0; i < str.size(); i++) {
-            s.push_back(str[i]);
-            dfs(index + 1, digits, m, s, ans);
-            s.pop_back();
-        }
-    }
 public:
     vector<string> letterCombinations(string digits) {
         if (digits.empty()) {
             return {};
         }
 
-        unordered_map<char, string> m = {
+        vector<string> answer;
+
+        unordered_map<char, string> numberToCharMap = {
             {'2', "abc"},
             {'3', "def"},
             {'4', "ghi"},
@@ -31,11 +18,22 @@ public:
             {'9', "wxyz"}
         };
 
-        vector<string> ans;
-        string s = "";
+        dfs(0, "", digits, numberToCharMap, answer);
 
-        dfs(0, digits, m, s, ans);
+        return answer;
+    }
 
-        return ans;
+private:
+    void dfs(int index, string s, string digits, 
+        unordered_map<char, string>& numberToCharMap, vector<string>& answer) {
+        if (index == digits.size()) {
+            answer.push_back(s);
+            return;
+        }
+
+        string str = numberToCharMap[digits[index]];
+        for (char ch : str) {
+            dfs(index + 1, s + ch, digits, numberToCharMap, answer);
+        }
     }
 };
