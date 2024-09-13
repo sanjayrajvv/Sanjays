@@ -1,9 +1,35 @@
 class Solution {
+public:
+    void solveSudoku(vector<vector<char>>& board) {
+        solve(board);
+    }
+
 private:
-    bool isValid(vector<vector<char>>& board, int row, int col, char ch) {
-        for (int i = 0; i < board.size(); i++) {
-            if (board[i][col] == ch) return false;
-            if (board[row][i] == ch) return false;
+    bool solve(vector<vector<char>>& board) {
+        for (int row = 0; row < 9; row++) {
+            for (int col = 0; col < 9; col++) {
+                if (board[row][col] != '.') continue;
+
+                for (char c = '1'; c <= '9'; c++) {
+                    if (isFeasible(row, col, c, board)) {
+                        board[row][col] = c;
+
+                        if (solve(board) == true) return true;
+                        else board[row][col] = '.';
+                    }
+                }
+
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    bool isFeasible(int row, int col, char c, vector<vector<char>>& board) {
+        for (int i = 0; i < 9; i++) {
+            if (board[i][col] == c) return false;
+            if (board[row][i] == c) return false;
         }
 
         int x = (row / 3) * 3;
@@ -11,34 +37,12 @@ private:
 
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                if (board[x + i][y + j] == ch) return false;
-            }
-        }
-
-        return true;
-    }
-
-    bool solve(vector<vector<char>>& board) {
-        for (int i = 0; i < board.size(); i++) {
-            for (int j = 0; j < board[0].size(); j++) {
-                if (board[i][j] == '.') {
-                    for (char c = '1'; c <= '9'; c++) {
-                        if (isValid(board, i, j, c)) {
-                            board[i][j] = c;
-                            if (solve(board) == true) return true;
-                            board[i][j] = '.';
-                        }
-                    }
-
+                if (board[x + i][y + j] == c) {
                     return false;
                 }
             }
         }
 
         return true;
-    }
-public:
-    void solveSudoku(vector<vector<char>>& board) {
-        solve(board);
     }
 };
