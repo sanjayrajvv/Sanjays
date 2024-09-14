@@ -5,7 +5,7 @@ public:
             return 0;
         }
 
-        std::vector<bool> prime(n, true);
+        vector<bool> prime(n, true);
         prime[0] = prime[1] = false;
 
         for (int i = 2; i * i < n; i++) {
@@ -16,13 +16,13 @@ public:
             }
         }
 
-        int primeCount = 0;
+        int totalPrimes = 0;
         for (int i = 2; i < n; i++) {
             if (prime[i]) {
-                primeCount++;
+                totalPrimes++;
             }
         }
 
-        return primeCount;
+        return totalPrimes;
     }
 };
