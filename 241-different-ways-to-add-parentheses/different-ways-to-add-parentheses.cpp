@@ -1,60 +1,70 @@
 class Solution {
 public:
     vector<int> diffWaysToCompute(string expression) {
+        // Initialize memoization vector to store results of subproblems
+        vector<vector<vector<int>>> memo(
+            expression.length(), vector<vector<int>>(expression.length()));
+        // Solve for the entire expression
+        return computeResults(expression, memo, 0, expression.length() - 1);
+    }
+
+private:
+    vector<int> computeResults(string& expression,
+                               vector<vector<vector<int>>>& memo, int start,
+                               int end) {
+        // If result is already memoized, return it
+        if (!memo[start][end].empty()) {
+            return memo[start][end];
+        }
+
         vector<int> results;
 
-        // Base case: if the string is empty, return an empty list
-        if (expression.length() == 0) return results;
-
-        // Base case: if the string is a single character, treat it as a number
-        // and return it
-        if (expression.length() == 1) {
-            results.push_back(stoi(expression));
+        // Base case: single digit
+        if (start == end) {
+            results.push_back(expression[start] - '0');
             return results;
         }
 
-        // If the string has only two characters and the first character is a
-        // digit, parse it as a number
-        if (expression.length() == 2 && isdigit(expression[0])) {
-            results.push_back(stoi(expression));
+        // Base case: two-digit number
+        if (end - start == 1 && isdigit(expression[start])) {
+            int tens = expression[start] - '0';
+            int ones = expression[end] - '0';
+            results.push_back(10 * tens + ones);
             return results;
         }
 
-        // Recursive case: iterate through each character
-        for (int i = 0; i < expression.length(); i++) {
+        // Recursive case: split the expression at each operator
+        for (int i = start; i <= end; i++) {
             char currentChar = expression[i];
+            if (isdigit(currentChar)) {
+                continue;
+            }
 
-            // Skip if the current character is a digit
-            if (isdigit(currentChar)) continue;
-
-            // Split the expression into left and right parts
             vector<int> leftResults =
-                diffWaysToCompute(expression.substr(0, i));
+                computeResults(expression, memo, start, i - 1);
             vector<int> rightResults =
-                diffWaysToCompute(expression.substr(i + 1));
+                computeResults(expression, memo, i + 1, end);
 
-            // Combine results from left and right parts
+            // Combine results from left and right subexpressions
             for (int leftValue : leftResults) {
                 for (int rightValue : rightResults) {
-                    int computedResult = 0;
-
-                    // Perform the operation based on the current character
                     switch (currentChar) {
                         case '+':
-                            computedResult = leftValue + rightValue;
+                            results.push_back(leftValue + rightValue);
                             break;
                         case '-':
-                            computedResult = leftValue - rightValue;
+                            results.push_back(leftValue - rightValue);
                             break;
                         case '*':
-                            computedResult = leftValue * rightValue;
+                            results.push_back(leftValue * rightValue);
                             break;
                     }
-
-                    results.push_back(computedResult);
                 }
             }
         }
+
+        // Memoize the result for this subproblem
+        memo[start][end] = results;
 
         return results;
     }
